@@ -28,7 +28,7 @@
         </header>
     </div>
 \\ map
-	<div id='geojsonFeature' style="height:500px; width:500px"; background-color: blue; border: 1px solid black;></div>
+	<div id='map' style="height:500px; width:500px"; background-color: blue; border: 1px solid black;></div>
 	<script>
 		
     			var geojsonFeature = {
@@ -44,10 +44,10 @@
     }
 };
     			
-    			
-    			
-    			
-    			
+    var myLayer = L.geoJson().addTo(map);
+
+myLayer.addData(geojsonFeature);
+	
 	</script>
 </body>
 </html>
