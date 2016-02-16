@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title> nope will this work?</title>
+  <title> maybe will this work?</title>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
   <style>
@@ -12,7 +12,7 @@
 
   <script>
   // initialize the map
-  var map = L.map('map').setView([36.7663942, -92.8317745], 5);
+  var map = L.map('map').setView([-104.99404, 39.75621], 13);
   // load a tile layer
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
@@ -26,7 +26,7 @@ var myLayer = L.geoJson().addTo(map);
 
 myLayer.addData(geojsonFeature);
 
-myLayer.addData(simplePoint);
+\\myLayer.addData(simplePoint);
 
 
 var geojsonFeature = { 
@@ -42,15 +42,7 @@ var geojsonFeature = {
 } 
 };
 
-var simplePoint = {
-  "type": "Feature",
-  "properties": {
-    "name": "Dinagat Islands"
-  },
-  "geometry": {
-    "type": "Point",
-    "coordinates": [125.6, 10.1]
-  }};
+
   </script>
 </body>
 </html>
