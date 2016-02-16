@@ -33,12 +33,12 @@
 	This is my first Leaflet.js map!
 	<div id='map' style="height:500px; width:500px"; background-color: blue; border: 1px solid black;></div>
 	<script>
-		var map = L.map('map').setView([33.393714, -104.534766], 13);
+		var map = L.map('map').setView([39.981816, -75.156004], 13);
 		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 		}).addTo(map);
 		
-		L.marker([33.393714, -104.534766]).addTo(map)
+		L.marker([39.981816, -75.156004]).addTo(map)
     			.bindPopup('Alien Sighting. <br> Call Fox Mulder.')
     			.openPopup();
 	</script>
