@@ -1,6 +1,6 @@
 <html>
 <head>
- <title> tab update 4</title>
+ <title> tab update 5</title>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
   <style>
@@ -21,6 +21,8 @@
     
     
     var marker = L.marker([39.963808, -75.178577]).addTo(map);
+    .bindPopup('<b> Map 1 </b><br> text text text')
+    .openPopup();
     
    L.geoJson(geojsonFeature).addTo(map);
    
