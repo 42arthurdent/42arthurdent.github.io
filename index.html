@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title> nope will this work??</title>
+  <title> ?nope will this work??</title>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
   <style>
@@ -23,25 +23,7 @@
     }).addTo(map);
     
 
-var myLayer = L.geoJson().addTo(map);
 
-myLayer.addData(geojsonFeature);
-
-//myLayer.addData(simplePoint);
-
-
-var geojsonFeature = { 
-"type": "Feature", 
-"properties": { 
-"name": "Coors Field", 
-"amenity": "Baseball Stadium", 
-"popupContent": 'Where the Rockies play!'
-}, 
-"geometry": { 
-"type": "Point", 
-"coordinates": [39.963808, -75.178577]
-  } 
-};
 
   </script>
 </body>
