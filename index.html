@@ -24,7 +24,7 @@
     .bindPopup('<b> Map 1 </b><br> text text text')
     .openPopup();
     
-
+  L.geoJson(geojsonFeature).addTo(map);
    
    var geojsonFeature = {
     "type": "Feature",
@@ -38,7 +38,7 @@
         "coordinates": [39.9, -75.17]
     }
 	};
-  L.geoJson(geojsonFeature).addTo(map);
+
     
 
   </script>
