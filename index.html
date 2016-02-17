@@ -16,7 +16,15 @@
 //function onEachFeature(feature, layer) {
 //		        layer.bindPopup(feature.properties.name)
 //		}
-		
+function onEachFeature(feature, layer) {
+        if (feature.properties && feature.properties.name) {
+        layer.bindPopup(feature.properties.name);
+    }
+}
+
+L.geoJson(geojsonFeature, {
+    onEachFeature: onEachFeature
+}).addTo(map);
 		
   var geoJson = [
   {
