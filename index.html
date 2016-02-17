@@ -16,7 +16,7 @@
 
 function onEachFeature(feature, layer) {
         if (feature.properties && feature.properties.Name) {
-        layer.bindPopup(feature.properties.Name);
+        layer.bindPopup(feature.properties.Name,feature.properties.url);
     }
 }
 
@@ -31,7 +31,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 1,
         "Name": "unknown",
-        "photo URL": "https://flic.kr/p/DdpvEX"
+        "photourl": "https://flic.kr/p/DdpvEX"
       },
       "geometry": {
         "type": "Point",
@@ -46,7 +46,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 2,
         "Name": "Not always permanent",
-        "photo URL": "http://muralarts.org/sites/default/files/imagecache/mural_single/2015-085_Summer_Kaleidoscope_01_0.jpg"
+        "photourl": "http://muralarts.org/sites/default/files/imagecache/mural_single/2015-085_Summer_Kaleidoscope_01_0.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -61,7 +61,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 3,
         "Name": "Promoting Peace",
-        "photo URL": "<img src='http://muralarts.org/sites/default/files/peace_0.jpg'/>"
+        "url": "<img src='http://muralarts.org/sites/default/files/peace_0.jpg'/>"
       },
       "geometry": {
         "type": "Point",
@@ -76,7 +76,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 4,
         "Name": "Community Involvement",
-        "photo URL": "http://muralarts.org/sites/default/files/2013-032_Micro_Macro_08.jpg"
+        "url": "http://muralarts.org/sites/default/files/2013-032_Micro_Macro_08.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -91,7 +91,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 5,
         "Name": "Restorative Justice",
-        "photo URL": "http://muralarts.org/sites/default/files/healing%20walls%20north%20S.jpg"
+        "url": "http://muralarts.org/sites/default/files/healing%20walls%20north%20S.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -106,7 +106,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 6,
         "Name": "Environmental Stewardship",
-        "photo URL": "http://muralarts.org/sites/default/files/cshead.jpg"
+        "url": "http://muralarts.org/sites/default/files/cshead.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -121,7 +121,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 7,
         "Name": "Health and Wellness -The Rise and Shine murals",
-        "photo URL": "http://muralarts.org/sites/default/files/2013-055_NPBP_Temple_2.jpg"
+        "url": "http://muralarts.org/sites/default/files/2013-055_NPBP_Temple_2.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -136,7 +136,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 8,
         "Name": "Landmark Artwork 'We the Youth' by Keith Haring",
-        "photo URL": "http://muralarts.org/sites/default/files/WeTheYouth_1.jpg"
+        "url": "http://muralarts.org/sites/default/files/WeTheYouth_1.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -151,7 +151,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 9,
         "Name": "Holding Grandmother's Quilt",
-        "photo URL": "http://muralarts.org/sites/default/files/quilt.jpg"
+        "url": "http://muralarts.org/sites/default/files/quilt.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -166,7 +166,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 10,
         "Name": "Love Letter Train Tour",
-        "photo URL": "https://muralarts.org/sites/default/files/LL%20Open%20your%20eyes_AdamWallacavaget.jpg"
+        "url": "https://muralarts.org/sites/default/files/LL%20Open%20your%20eyes_AdamWallacavaget.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -181,7 +181,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 11,
         "Name": "The first sculpture 2006",
-        "photo URL": "https://scontent-lga3-1.xx.fbcdn.net/hphotos-xaf1/v/t1.0-9/430527_10150719401753615_1192568948_n.jpg?oh=b49111bf517bde201e4395a7ae0e0fb8&oe=5734EA0A"
+        "url": "https://scontent-lga3-1.xx.fbcdn.net/hphotos-xaf1/v/t1.0-9/430527_10150719401753615_1192568948_n.jpg?oh=b49111bf517bde201e4395a7ae0e0fb8&oe=5734EA0A"
       },
       "geometry": {
         "type": "Point",
@@ -196,7 +196,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 12,
         "Name": "Beautifying the Zoo garage",
-        "photo URL": "http://muralarts.org/sites/default/files/zooh.jpg"
+        "url": "http://muralarts.org/sites/default/files/zooh.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -211,7 +211,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 13,
         "Name": "Philadelphia on an Half Tank",
-        "photo URL": "http://muralarts.org/sites/default/files/Philadelphia%20on%20a%20Half%20Tank.jpg"
+        "url": "http://muralarts.org/sites/default/files/Philadelphia%20on%20a%20Half%20Tank.jpg"
       },
       "geometry": {
         "type": "Point",
@@ -232,15 +232,11 @@ function onEachFeature(feature, layer) {
 		});
 		var map = L.map('map')
 			.addLayer(CartoDB_Positron)
-			.setView([39.963808, -75.178577], 13)
+			.setView([39.963808, -75.178577], 12)
 			L.geoJson(geoJsonAL, {
 				 onEachFeature: onEachFeature
 			}).addTo(map);
     
-    
-  
-
-
     
   </script>
 </body>
