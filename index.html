@@ -22,11 +22,9 @@ function onEachFeature(feature, layer) {
     }
 }
 
-L.geoJson(geojsonFeature, {
-    onEachFeature: onEachFeature
-}).addTo(map);
+
 		
-  var geoJson = [
+  var geoJsonAL = [
   {
  "type": "FeatureCollection",
   "features": [
@@ -237,7 +235,9 @@ L.geoJson(geojsonFeature, {
 		var map = L.map('map')
 			.addLayer(CartoDB_Positron)
 			.setView([39.963808, -75.178577], 13)
-			L.geoJson(geoJson).addTo(map);
+			L.geoJson(geoJsonAL){
+    onEachFeature: onEachFeature
+}.addTo(map);
     
     
     //var marker = L.marker([39.963808, -75.178577]).addTo(map)
