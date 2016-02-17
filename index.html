@@ -235,16 +235,9 @@
     //var marker = L.marker([39.963808, -75.178577]).addTo(map)
     //.bindPopup('text text')
      //.openPopup();
-var myLayer = L.geoJson(polygon, {
-    onEachFeature: yourOnEachFeatureFunction
-}).addTo(map);
 
-function yourOnEachFeatureFunction(feature, layer){
-    if (feature.properties.name) {
-        layer.bindPopup(feature.properties.name);
-    }
-}
-    
+
+
     
   </script>
 </body>
