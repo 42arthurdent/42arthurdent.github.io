@@ -13,9 +13,11 @@
   <div id='map' style="height:800px; width:1200px"></div>
 
 <script>
-function onEachFeature(feature, layer) {
-		        layer.bindPopup(feature.properties.name)
-		}
+//function onEachFeature(feature, layer) {
+//		        layer.bindPopup(feature.properties.name)
+//		}
+		
+		
   var geoJson = [
   {
  "type": "FeatureCollection",
@@ -233,6 +235,16 @@ function onEachFeature(feature, layer) {
     //var marker = L.marker([39.963808, -75.178577]).addTo(map)
     //.bindPopup('text text')
      //.openPopup();
+var myLayer = L.geoJson(polygon, {
+    onEachFeature: yourOnEachFeatureFunction
+}).addTo(map);
+
+function yourOnEachFeatureFunction(feature, layer){
+    if (feature.properties.name) {
+        layer.bindPopup(feature.properties.name);
+    }
+}
+    
     
   </script>
 </body>
