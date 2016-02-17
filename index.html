@@ -12,8 +12,8 @@
   <div id='map' style="height:800px; width:1200px"></div>
 
 <script>
-function onEachFeature(feature, layer) {
-		        layer.bindPopup(feature.properties.name)
+function onEachFeature(feature) {
+		        layer.bindPopup(feature.properties.Name)
 		}
   var geoJson = [
   {
