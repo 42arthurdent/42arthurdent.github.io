@@ -10,12 +10,10 @@
 <body>
 	body text
 
-  <div id='map' style="height:800px; width:1200px"></div>
+  <div id='map' style="height:800px; width:1600px"></div>
 
 <script>
-//function onEachFeature(feature, layer) {
-//		        layer.bindPopup(feature.properties.name)
-//		}
+
 function onEachFeature(feature, layer) {
         if (feature.properties && feature.properties.Name) {
         layer.bindPopup(feature.properties.Name);
@@ -240,10 +238,7 @@ function onEachFeature(feature, layer) {
 			}).addTo(map);
     
     
-    //var marker = L.marker([39.963808, -75.178577]).addTo(map)
-    //.bindPopup('text text')
-     //.openPopup();
-
+  
 
 
     
