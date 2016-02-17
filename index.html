@@ -236,14 +236,14 @@ function onEachFeature(feature, layer) {
 		subdomains: 'abcd',
 		maxZoom: 19
 		});
-	<div align="center">
+
 		var map = L.map('map')
 			.addLayer(CartoDB_Positron)
 			.setView([39.963808, -75.178577], 12)
 			L.geoJson(geoJsonAL, {
 				 onEachFeature: onEachFeature
 			}).addTo(map);
-    </div>
+   
     
   </script>
 </body>
