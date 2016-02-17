@@ -14,7 +14,9 @@
 <script>
 function onEachFeature(Feature) {
 		        layer.bindPopup(features.properties.Name)
+		        .openPopup()
 		}
+		
   var geoJson = [
   {
  "type": "FeatureCollection",
