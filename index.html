@@ -1,224 +1,256 @@
-<!doctype html>
+Skip to content
+This repository  
+Search
+Pull requests
+Issues
+Gist
+ @42arthurdent
+ Unwatch 1
+  Star 0
+ Fork 0 42arthurdent/42arthurdent.github.io
+ Code  Issues 0  Pull requests 0  Wiki  Pulse  Graphs  Settings
+Branch: master Find file Copy path42arthurdent.github.io/index.html
+cd27b23  8 minutes ago
+@42arthurdent 42arthurdent Update index.html
+1 contributor
+RawBlameHistory     240 lines (231 sloc)  5.65 KB
 <html>
-  <head>
-    
-    <title>web mapping test</title>
+<head>
+ <title> tab update 1</title>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
-    <style>#map { height: 800px; width: 1200px;}</style>
-    <h1 class="header"> header text</h1>
   </head>
-  <body>
-    body text 1
-    <div class="wrapper">
-      <header>
-        <p class="header"><img src='http://muralarts.org/sites/default/files/imagecache/mural_single/2015-085_Summer_Kaleidoscope_01_0.jpg'/></p>
 
-        <ul>
-	<p> text text text.</p>
-        </ul>
+<body>
+	body text
 
-      </header>
-      <section>
-        <h3>
-        	<div id='map'</div>
-		<script>
-		function onEachFeature(feature, layer) {
+  <div id='map' style="height:800px; width:1200px"></div>
+
+<script>
+function onEachFeature(feature, layer) {
 		        layer.bindPopup(feature.properties.name)
 		}
-				var geojson = [
-		  
-		      {
-		        "type": "FeatureCollection",
-		        "features": [
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -81.293274,
-				37.269597
-		              ]
-		            },
-		            "properties": {
-		              "name": "Texas Gladden",
-		              "date": "10/24/1959",
-		              "address": "Bluefield, VA",
-		              "description": "Texas Gladden was an American folk singer, best known for her traditional Appalachian ballad style of singing.  Gladden knew more than 300 songs by memory, having learned them from her family, factory co-workers, and the radio."
-		            }
-		          },
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -80.914850,
-				36.657543
-		              ]
-		            },
-		            "properties": {
-		              "name": "Wade Ward",
-		              "date": "10/29/1959",
-		              "address": "Galax, VA",
-		              "description": "Wade Ward was an American old-time musician from Galax, Virginia known for his fiddle and clawhammer banjo recordings.  Lomax recorded him multiple times beginning as early as 1933.  Lomax's recordings during the Southern Journey were the last ones he did of longtime friend Wade Ward."
-		            }
-		          },
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -81.681062,
-				36.811559
-		              ]
-		            },
-		            "properties": {
-		              "name": "Spencer Moore",
-		              "date": "9/3/1960",
-		              "address": "Chilhowie,VA",
-		              "description": "Born in Tennessee in 1919, Spencer Moore love of folk music began at an early age.  A tobacco farmer his whole life, Moore attended the White Top Folk Festival in 1933 and was inspired to start playing folk music with his brother Joe. "
-		            }
-		          },
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -82.986838,
-				37.141485
-		              ]
-		            },
-		            "properties": {
-		              "name": "Mt. Olivet Old Regular Church",
-		              "date": "9/5/1960",
-		              "address": "Blackley, KY",
-		              "description": "The Mount Olivet Old Regular Church was a congregation staged in the woods outside of Blackley, Kentucky.  Led by the charismatic Reverend Elder I.D. Back, the church services were almost exclusively in song.  "
-		            }
-		          },
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -89.947475,
-				34.515610
-		              ]
-		            },
-		            "properties": {
-		              "name": "Mississippi Fred McDowell",
-		              "date": "9/21/1960",
-		              "address": "Como, MS",
-		              "description": "A sharecropper who sang and played guitar, McDowell wrote hundreds of work songs.  Out of all the musicians Lomax recorded on his southern journey, Fred McDowell became the most famous.  "
-		            }
-		          },
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -92.158973,
-				35.565491
-		              ]
-		            },
-		            "properties": {
-		              "name": "Almeda Riddle",
-		              "date": "10/2/1960",
-		              "address": "Greer's Ferry, AK",
-		              "description": "Almeda Riddle was one of America's most famous ballad singers. Born and raised in Cleburne County, Arkansas, Riddle sang hundreds of ballads, hymns, and children's songs without any instrumental accompaniment."
-		            }
-		          },
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -90.499272,
- 				33.919706
-		              ]
-		            },
-		            "properties": {
-		              "name": "Mississippi State Penitentiary",
-		              "date": "9/16/1960",
-		              "address": "Parchman, MS",
-		              "description": "Alan Lomax found some of the most powerful music of the American South in the region’s oppressive prison system. The harmonic complexity and dynamic range of music recorded by Lomax at the Mississippi State Penitentiary in Parchman remain among the most vivid in African American song."
-		            }
-		          },
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -88.181692,
-				32.572370
-		              ]
-		            },
-		            "properties": {
-		              "name": "Vera Ward Hall",
-		              "date": "10/10/1960",
-		              "address": "Livingston, AL",
-		              "description": "Adell Hall Ward, better known as Vera Ward Hall was an American folk singer, born in Livingston, Alabama. She spent most of her life as a domestic servant and sung powerful children's songs, spirituals, and blues."
-		            }
-		          },
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -76.717499,
-				37.269366
-		              ]
-		            },
-		            "properties": {
-		              "name": "Bessie Jones",
-		              "date": "4/28/1960",
-		              "address": "Williamsburg, VA",
-		              "description": "Bessie Smith Jones was an African American gospel and folk singer who was famous for her gospel songs, party game songs, ring shouts and hollers.  Her four parents were born into slavery and they taught her about slave life, including slave music, which shaped her as a musician.  "
-		            }
-		          },
-		          {
-		            "type": "Feature",
-		            "geometry": {
-		              "type": "Point",
-		              "coordinates": [
-		                -76.430186,
-				36.863038
-		              ]
-		            },
-		            "properties": {
-		              "name": "The Union Choir Of The Church Of God And Saints Of Christ",
-		              "date": "10/29/2015",
-		              "address": "Belleville, VA",
-		              "description": "The Union Choir Of The Church Of God And Saints Of Christ was a small black Jewish-Christian church established in Kansas in 1896 and later moved to Suffolk, Virginia.  Lomax made two tape recordings of the spiritual songs sung by church's choir."
-		            }
-		          }
-		        ]
-		      }
-		
-		];
-		
-		var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+  var geoJson = [
+  {
+ "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 1,
+        "Name": "unknown",
+        "photo URL": "https://flic.kr/p/DdpvEX"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.178577,
+          39.963808
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 2,
+        "Name": "Not always permanent",
+        "photo URL": "http://muralarts.org/sites/default/files/imagecache/mural_single/2015-085_Summer_Kaleidoscope_01_0.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.178577,
+          39.963808
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 3,
+        "Name": "Promoting Peace",
+        "photo URL": "<img src='http://muralarts.org/sites/default/files/peace_0.jpg'/>"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.192319,
+          39.937113
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 4,
+        "Name": "Community Involvement",
+        "photo URL": "http://muralarts.org/sites/default/files/2013-032_Micro_Macro_08.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.194604,
+          39.966153
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 5,
+        "Name": "Restorative Justice",
+        "photo URL": "http://muralarts.org/sites/default/files/healing%20walls%20north%20S.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.147042,
+          39.998849
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 6,
+        "Name": "Environmental Stewardship",
+        "photo URL": "http://muralarts.org/sites/default/files/cshead.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.228402,
+          39.975688
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 7,
+        "Name": "Health and Wellness -The Rise and Shine murals",
+        "photo URL": "http://muralarts.org/sites/default/files/2013-055_NPBP_Temple_2.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.154318,
+          39.994536
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 8,
+        "Name": "Landmark Artwork 'We the Youth' by Keith Haring",
+        "photo URL": "http://muralarts.org/sites/default/files/WeTheYouth_1.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.179902,
+          39.938588
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 9,
+        "Name": "Holding Grandmother's Quilt",
+        "photo URL": "http://muralarts.org/sites/default/files/quilt.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.201231,
+          39.966318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 10,
+        "Name": "Love Letter Train Tour",
+        "photo URL": "https://muralarts.org/sites/default/files/LL%20Open%20your%20eyes_AdamWallacavaget.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.224936,
+          39.960064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 11,
+        "Name": "The first sculpture 2006",
+        "photo URL": "https://scontent-lga3-1.xx.fbcdn.net/hphotos-xaf1/v/t1.0-9/430527_10150719401753615_1192568948_n.jpg?oh=b49111bf517bde201e4395a7ae0e0fb8&oe=5734EA0A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.187488,
+          39.974925
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 12,
+        "Name": "Beautifying the Zoo garage",
+        "photo URL": "http://muralarts.org/sites/default/files/zooh.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.196619,
+          39.974677
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 13,
+        "Name": "Philadelphia on an Half Tank",
+        "photo URL": "http://muralarts.org/sites/default/files/Philadelphia%20on%20a%20Half%20Tank.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.196838,
+          39.905595
+        ]
+      }
+    }
+  ]
+}
+  ];
+  // map
+ var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
 		     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 		subdomains: 'abcd',
 		maxZoom: 19
 		});
 		var map = L.map('map')
 			.addLayer(CartoDB_Positron)
-			.setView([34.975973, -85.095905], 6)
-			L.geoJson(geojson).addTo(map);
-		
-		</script>
-	</h3>
-<p><a id="Resources" class="anchor" href="#Resources" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Resources</p>
-
-<p><a href="https://www.loc.gov/folklife/lomax/">Alan Lomax Collection at the Library of Congress </a></p>
-<p><a href="http://www.amazon.com/The-Southern-Journey-Alan-Lomax/dp/0393081079">The Southern Journey of Alan Lomax: Words, Photographs, and Music by Tom Piazza </a></p>
-    </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
-  </body>
+			.setView([39.963808, -75.178577], 13)
+			L.geoJson(geoJson).addTo(map);
+    
+    
+    //var marker = L.marker([39.963808, -75.178577]).addTo(map)
+    //.bindPopup('text text')
+     //.openPopup();
+    
+  </script>
+</body>
 </html>
+Status API Training Shop Blog About Pricing
+© 2016 GitHub, Inc. Terms Privacy Security Contact Help
