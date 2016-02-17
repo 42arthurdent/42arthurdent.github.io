@@ -16,7 +16,7 @@
 
 function onEachFeature(feature, layer) {
         if (feature.properties && feature.properties.Name) {
-        layer.bindPopup(feature.properties.Name,feature.properties.url);
+        layer.bindPopup(feature.properties.url);
     }
 }
 
