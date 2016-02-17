@@ -254,23 +254,7 @@ function onEachFeature(Feature) {
     
     
     
- var geojsonMarkerOptions = {
-            radius: 10,
-            fillColor: "rgb(255,0,195)",
-            color: "#fff",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 1
-        };
-        // load the geojson to the map with marker styling
-        L.geoJson(geoJson, {
-            pointToLayer: function (feature, latlng) {
-                var popupOptions = {maxWidth: 200};
-                var popupContent = "This is some content";
-                return L.circleMarker(latlng, geojsonMarkerOptions).bindPopup(popupContent,popupOptions);
-            }
-        }).addTo(map);   
-    
+
     //var marker = L.marker([39.963808, -75.178577]).addTo(map)
     //.bindPopup('text text')
      //.openPopup();
