@@ -15,9 +15,9 @@
 <script>
 
 function onEachFeature(feature, layer) {
-        popupOptions = {maxWidth: 25};
+        popupOptions = {(maxWidth: 2), (maxHeight,2)};
         if (feature.properties && feature.properties.Name) {
-        layer.bindPopup(feature.properties.url,popupOptions);
+        layer.bindPopup(feature.properties.url + feature.properties.Name, popupOptions);
     }
 }
 
