@@ -15,7 +15,7 @@
 <script>
 
 function onEachFeature(feature, layer) {
-        popupOptions = {maxWidth: 2};
+      //  popupOptions = {maxWidth: 40};
         if (feature.properties && feature.properties.Name) {
         layer.bindPopup(feature.properties.url + feature.properties.Name, popupOptions);
     }
@@ -48,7 +48,7 @@ function onEachFeature(feature, layer) {
       "properties": {
         "OBJECTID": 3,
         "Name": "Promoting Peace",
-        "url": "<img src='http://muralarts.org/sites/default/files/peace_0.jpg'/>"
+        "url": "<img src='http://muralarts.org/sites/default/files/peace_0.jpg' height="42" width="42" />"
       },
       "geometry": {
         "type": "Point",
