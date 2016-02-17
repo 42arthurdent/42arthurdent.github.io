@@ -7,14 +7,8 @@
      <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
       <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-    // map
- var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-		     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-		subdomains: 'abcd',
-		maxZoom: 19
-		}); 
-     
-    
+  
+ 
 <style>
 body { background-color: azure;}
 h1 { text-align: center;}
@@ -228,6 +222,13 @@ function onEachFeature(feature, layer) {
   ]
 }
   ];
+  
+ var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+		     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	
+		maxZoom: 19
+		}); 
+ 
  
 
 		var map = L.map('map')
