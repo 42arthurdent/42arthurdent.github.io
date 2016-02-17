@@ -7,17 +7,216 @@
 
 <body>
 	body text
+
   <div id='map' style="height:800px; width:1200px"></div>
 
-  <script>
-  
-  
-  
+<script>
+  var geoJson = [
+ "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 1,
+        "Name": "unknown",
+        "photo URL": "https://flic.kr/p/DdpvEX"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.178577,
+          39.963808
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 2,
+        "Name": "Not always permanent",
+        "photo URL": "http://muralarts.org/sites/default/files/imagecache/mural_single/2015-085_Summer_Kaleidoscope_01_0.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.178577,
+          39.963808
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 3,
+        "Name": "Promoting Peace",
+        "photo URL": <img src="http://muralarts.org/sites/default/files/peace_0.jpg"/>
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.192319,
+          39.937113
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 4,
+        "Name": "Community Involvement",
+        "photo URL": "http://muralarts.org/sites/default/files/2013-032_Micro_Macro_08.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.194604,
+          39.966153
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 5,
+        "Name": "Restorative Justice",
+        "photo URL": "http://muralarts.org/sites/default/files/healing%20walls%20north%20S.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.147042,
+          39.998849
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 6,
+        "Name": "Environmental Stewardship",
+        "photo URL": "http://muralarts.org/sites/default/files/cshead.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.228402,
+          39.975688
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 7,
+        "Name": "Health and Wellness -The Rise and Shine murals",
+        "photo URL": "http://muralarts.org/sites/default/files/2013-055_NPBP_Temple_2.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.154318,
+          39.994536
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 8,
+        "Name": "Landmark Artwork 'We the Youth' by Keith Haring",
+        "photo URL": "http://muralarts.org/sites/default/files/WeTheYouth_1.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.179902,
+          39.938588
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 9,
+        "Name": "Holding Grandmother�s Quilt",
+        "photo URL": "http://muralarts.org/sites/default/files/quilt.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.201231,
+          39.966318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 10,
+        "Name": "Love Letter Train Tour",
+        "photo URL": "https://muralarts.org/sites/default/files/LL%20Open%20your%20eyes_AdamWallacavaget.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.224936,
+          39.960064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 11,
+        "Name": "The first sculpture 2006",
+        "photo URL": "https://scontent-lga3-1.xx.fbcdn.net/hphotos-xaf1/v/t1.0-9/430527_10150719401753615_1192568948_n.jpg?oh=b49111bf517bde201e4395a7ae0e0fb8&oe=5734EA0A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.187488,
+          39.974925
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 12,
+        "Name": "Beautifying the Zoo garage",
+        "photo URL": "http://muralarts.org/sites/default/files/zooh.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.196619,
+          39.974677
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "OBJECTID": 13,
+        "Name": "Philadelphia on an Half Tank",
+        "photo URL": "http://muralarts.org/sites/default/files/Philadelphia%20on%20a%20Half%20Tank.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.196838,
+          39.905595
+        ]
+      }
+    }
+  ]
+}
+  ];
   // map
  var map = L.map('map').setView([39.9,-75.2], 12);
 		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-		}).addTo(map);
+    		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'	})
+    		L.geoJson(geoJson).addTo(map);
     
     
     //var marker = L.marker([39.963808, -75.178577]).addTo(map)
