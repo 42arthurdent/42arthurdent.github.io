@@ -265,7 +265,7 @@ function onEachFeature(feature, layer) {
 	var baseMaps = {
 		'Stamen Watercolor': basemap_0	};
 		L.control.layers(baseMaps,{"All Murals": exp_muralsallJSON},{collapsed:false}).addTo(map);
-		L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map);
+	//	L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map);
 	L.geoJson(geoJsonAL, {
 				 onEachFeature: onEachFeature
 			}).addTo(map);
