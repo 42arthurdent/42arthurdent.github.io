@@ -37,7 +37,7 @@
 		
 		
 		function pop_muralsall(feature, layer) {					
-			var popupContent = '<table><tr><th scope="row">ID</th><td>' + Autolinker.link(String(feature.properties['ID'])) +  '</td></tr><tr><th scope="row">Work_Name</th><td>' + Autolinker.link(String(feature.properties['Work Name'])) + '</td></tr><tr><th scope="row">Address</th><td>' + Autolinker.link(String(feature.properties['address'])) + '</td></tr></table>';
+			var popupContent = '<table><tr><th scope="row">ID</th><td>' + Autolinker.link(String(feature.properties['ID'])) +  '</td></tr><tr><th scope="row">Work Name</th><td>' + Autolinker.link(String(feature.properties['Work_Name'])) + '</td></tr><tr><th scope="row">Address</th><td>' + Autolinker.link(String(feature.properties['address'])) + '</td></tr></table>';
 			layer.bindPopup(popupContent);
 		}
 
