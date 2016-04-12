@@ -1,0 +1,46 @@
+<html>
+<head>  
+<title>Hike in Yosemite</title>  
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/> 
+ <link rel="stylesheet" href="data/Leaflet.Instagram.css"/> 
+ <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"> </script>  
+ <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+ 
+ <style>    
+ #map{ height: 100% }  </style>
+ </head>
+ <body> 
+ <div id="map"></div>
+ <script src="data/reqwest.min.js"> </script> 
+ <script src="data/Leaflet.Instagram.js"> </script> 
+ <script src="data/trail2.js"></script>
+ 
+ <script>
+ 
+  alert("Howdy Prof. Burns! I couldn't get Instagram to relinquish its precious token. So I used the one from the lecture (sorry) here is a map of the Clouds Rest trail in Yosemite NP. The route is added as a geoJson and if the token stops working there are a couple of my own photos added from the hike as marker popups.");
+ 
+ function onEachFeature(feature, layer) {
+       popupOptions = {maxWidth: 260};
+        if (feature.properties && feature.properties.photo) 
+		{
+        layer.bindPopup(feature.properties.photo + "<br>" + feature.properties.Name, popupOptions);
+		}
+	}
+ var layer = new L.StamenTileLayer("terrain");
+ var map = L.map('map').setView([37.790250, -119.486660], 13); 
+ var at = '256164975.c9600e9.7a9aeb07284e4220bdddeaddcbedee38'; 
+ var url = "https://api.instagram.com/v1/media/search?lat=37.767561&lng&lng=-119.489696&distance=5000&access_token="+at;
+ L.tileLayer('http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg', 
+ {   
+	attribution: 'Map tiles <a href="http://maps.stamen.com/">Stamen Design</a>, Data by <a href="http://openstreetmap.org/">OpenStreetMap</a>', 
+	maxZoom: 19,
+	minZoom: 7 
+ }
+ ).addTo(map); 
+   L.instagram(url).addTo(map);
+   L.geoJson(trail2, {
+	onEachFeature: onEachFeature
+					}).addTo(map);
+ </script>
+ </body>
+ </html>
