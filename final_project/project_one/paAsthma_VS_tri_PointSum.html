@@ -8,6 +8,7 @@
  <body> 
 	<div id="map"></div>
 		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+		<script src="js/Autolinker.min.js"></script>
 		<script type="text/javascript" src="data/paCounty.js"></script>
 		<script src="data/trisum.js"></script>
 		<script>
@@ -57,7 +58,7 @@ L.geoJson(paCounty).addTo(map);
 			       d > 10    ? '#41b6c4' :
 			       d > 7.2   ? '#a1dab4' :
 			       d > 0     ? '#ffffcc' :
-							   '#bdbdbd';
+							   '';
 		}
 //STYLING FOR COUNTY POLYGON
 		function style(feature) {
@@ -75,14 +76,14 @@ L.geoJson(paCounty).addTo(map);
 			var layer = e.target;
 			layer.setStyle({
 				weight: 4,
-				color: 'white',
+				color: '#666',
 				dashArray: '',
 				fillOpacity: 0.1
 			});
 // Layer bring to front keeps the border of selected county on top
-		if (!L.Browser.ie && !L.Browser.opera) {
-				layer.bringToFront();
-			}
+//		if (!L.Browser.ie && !L.Browser.opera) {
+//				layer.bringToFront();
+//			}
 		info.update(layer.feature.properties);
 		}
 		
@@ -155,11 +156,27 @@ var legend = L.control({position: 'bottomleft'});
 			};
 		}
 			
+			
+			
+			
+			function pop_trisum(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">FACILITY</th><td>' + Autolinker.link(String(feature.properties['FACILITY_N'])) + '</td></tr><tr><th scope="row">ANNUAL REALEASE (POUNDS)</th><td>' + Autolinker.link(String(feature.properties['SUM'])) + '</td></tr></table>';
+						layer.bindPopup(popupContent);
+			}
+			
+			
+			
+			
 			var trisumJSON = new L.geoJson(trisum,{
+					onEachFeature: pop_trisum,
 					pointToLayer: function (feature, latlng) {  
 					return L.circleMarker(latlng, Styletrisum(feature))
 				}
 			});		
+			
+			
+			
+			
 			
 			var baseLayers = {
 			"Pencil": pencil,
