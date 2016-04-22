@@ -21,7 +21,7 @@
 			mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiNDJhcnRodXJkZW50IiwiYSI6ImNpbHk2cWZ5MDA1dzI4M2tzN3NrcGp3cXUifQ.IVHPZyM8rvKuYKcfSzPFEQ';
 
 	    var pencil  = L.tileLayer(mbUrl, {id: 'mapbox.pencil', attribution: mbAttr}),
-		    world-blue  = L.tileLayer(mbUrl, {id: 'mapbox.world-blue',   attribution: mbAttr});
+		    streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
 
 			
 			var map = L.map('map',{
@@ -180,7 +180,7 @@ var legend = L.control({position: 'bottomleft'});
 			
 			var baseLayers = {
 			"Pencil": pencil,
-			"World-blue": world-blue
+			"Streets": streets
 			};
 		var overlays = {
 			"Toxics Release Inventory": trisumJSON
