@@ -1,0 +1,73 @@
+<html>
+<head>  
+<title>heat map</title>  
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"> 
+	 		  <style> #map{ height: 100% }</style>
+	</head>
+ <body> 
+	<div id="map"></div>
+		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+			<script src="js/HeatLayer.js"></script>
+			<script src="js/Autolinker.min.js"></script>
+			<script src="data/schools.js"></script>
+			<script src="data/centerPoints.js"></script>
+			<script src="js/simpleheat.js"></script>
+			<script src="js/HeatLayer.js"></script> -->
+			<script src="js/leaflet-heat.js"></script>
+		
+		<script>
+	
+	
+var MAP = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+});
+	
+	var map = L.map('map',{
+		maxZoom: 13,
+		minZoom: 10,
+		maxBounds: (bounds)
+		}
+	)
+	.addLayer(MAP)
+	.setView([40.02, -75.14], 11);
+	
+	var bounds = [[39.88, -75.24], [40.04, -75.08]];   
+	
+centerPoints = centerPoints.map(function (p) { return [p[0], p[1]]; });
+var heat = L.heatLayer(centerPoints,{
+			minOpacity: 0, 				//- the minimum opacity the heat will start at
+			maxZoom: 15,				//zoom level where the points reach maximum intensity
+			max: 1,						// maximum point intensity, 1.0 by default
+			radius: 35,					// radius of each "point" of the heatmap, 25 by default
+//			gradient: {}, 				color gradient config, e.g. {0.4: 'blue', 0.65: 'lime', 1: 'red'}
+			blur: 30					// amount of blur, 15 by default
+			}).addTo(map);
+
+		var schoolsJson = new L.LayerGroup();
+		function schoolStyle (feature){
+			return {
+						radius: '2',
+						fillColor: '#d6cd68',
+						color: '#000000',
+						weight: 1,
+						fillOpacity: '1.0'
+			};
+		}
+		var schoolsJson = new L.geoJson(schools,{
+			pointToLayer: function (feature, latlng) {  
+			return L.circleMarker(latlng, schoolStyle(feature))
+				}
+			}
+		);		
+
+		var schools = new L.LayerGroup();
+
+		var overlays = {
+			"Respiratory Hazard Index": heat,
+			"Schools": schoolsJson,
+		};
+		
+		L.control.layers('',overlays).addTo(map);
+ </script>
+ </body>
+ </html>
