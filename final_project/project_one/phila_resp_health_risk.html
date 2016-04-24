@@ -38,23 +38,21 @@ var MAP = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png
 			blur: 30					// amount of blur, 15 by default
 			}).addTo(map);
 
-	var schoolsJson = new L.LayerGroup();
-	
-	function schoolStyle (feature){
-		return {
-		radius: '2',
-		fillColor: '#d6cd68',
-		color: '#000000',
-		weight: 1,
-		fillOpacity: '1.0'
-		};
-	}
-	var schoolsJson = new L.geoJson(schools,{
-		pointToLayer: function (feature, latlng) {  
-		return L.circleMarker(latlng, schoolStyle(feature))
-		}
-		});		
-	var schools = new L.LayerGroup();
+	var busIcon = L.icon({
+	iconUrl: 'data/bus.png',
+	iconSize:    [12, 12],
+	iconAnchor:  [12, 20]
+	//popupAnchor: [12, 41]
+	//  shadowUrl: 'data/bear.png',
+	//  shadowSize:  [41, 41]
+			}
+		);
+			var schoolsJson = new L.geoJson(schools,{
+			pointToLayer: function (feature, latlng) {
+			return L.marker(latlng, {icon: busIcon});
+					}
+				}
+			);
 		
 	var overlays = {
 		"Respiratory Hazard Index": heat,
