@@ -1,0 +1,36 @@
+CREATE TABLE CHEMICAL_DATA (
+    CAS_NUM_COMPOUND_ID varchar(9)  NOT NULL,
+    CLEAn_AIR_ACT_CHEMICAL boolean  NOT NULL,
+    CLASSIFICATION varchar(6)  NOT NULL,
+    METAL boolean  NOT NULL,
+    METAL_CATEGORY int  NOT NULL,
+    CARCINOGEN boolean  NOT NULL,
+    UNIT_OF_MEASURE varchar(6)  NOT NULL,
+    CONSTRAINT CHEMICAL_DATA_pk PRIMARY KEY (CAS_NUM_COMPOUND_ID)
+);
+
+COMMENT ON CHEMICAL_DATA IS 'For Category of Metal. See Documentation Appendix A.';
+
+INSERT INTO chemical_data(
+cas_num_compound_id, clean_air_act_chemical, classification, 
+metal, metal_category, carcinogen, unit_of_measure)
+(SELECT DISTINCT ON (cas_num_compound_id) cas_num_compound_id, clean_air_act_chemical::bool, classification, 
+metal::bool, metal_category::int, carcinogen::bool, unit_of_measure
+FROM tri_data_temp);
+
+
+
+CREATE TABLE CHEM_CLASSIFICATION (
+    CLASSIFICATION varchar(6)  NOT NULL,
+    CLASS_LONG varchar(50)  NOT NULL,
+    CONSTRAINT CHEM_CLASSIFICATION_pk PRIMARY KEY (CLASSIFICATION)
+);
+
+INSERT INTO chem_classification(
+            classification, class_long)
+    VALUES ('TRI','STANDARD TRI CHEMICAL'), ('PBT','PERSISTANT BIOACCUMULATIVE TOXIC'), ('DIOXIN','DIOXIN OR DIOXIN LIKE COMPOUND');
+
+
+
+
+

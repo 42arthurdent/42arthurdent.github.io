@@ -1,0 +1,18 @@
+CREATE TABLE naics (
+    NAICS_ID varchar  NOT NULL,
+    PRIMARY_naics varchar(6)  NOT NULL,
+    NAICS_2 varchar(6) ,
+    NAICS_3 varchar(6),
+    NAICS_4 varchar(6),
+    NAICS_5 varchar(6),
+    NAICS_6 varchar(6),
+    CONSTRAINT naics_pk PRIMARY KEY (NAICS_ID)
+);
+
+INSERT INTO naics(
+naics_id, primary_naics, naics_2, naics_3, naics_4, naics_5, naics_6)
+ (SELECT DISTINCT ON (primary_naics || naics_2 ||naics_3|| naics_4|| naics_5 || naics_6) (primary_naics || naics_2 ||naics_3|| naics_4|| naics_5 || naics_6) as niacs_id, primary_naics, naics_2, naics_3, naics_4, naics_5, naics_6
+FROM tri_data_temp);
+
+COMMENT ON TABLE naics IS 'Primary North American Industry Code System (NAIC) code that represents the Facility''''s primary Business activity. NAICS codes were first reported in 2006. For years prior to 2006, NAICS codes have been assigned.';
+

@@ -55,7 +55,7 @@ CREATE TABLE TRI_FACILITY_no_xy (
     FEDERAL_FACILITY boolean  NOT NULL,
     LATITUDE varchar,
     LONGITUDE varchar,
-    NIACS_ID varchar  NOT NULL,
+    NAICS_ID varchar  NOT NULL,
     PARENT_COMPANY_NAME varchar(60)  NOT NULL,
     PARENT_COMPANY_DB_NUMBER varchar(60)  NULL
 );
