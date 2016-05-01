@@ -1,0 +1,70 @@
+CREATE TABLE TRI_FACILITY (
+    TRI_FACILITY_ID varchar(15)  NOT NULL,
+    FACILITY_NAME varchar(62)  NOT NULL,
+    STREET_ADDRESS varchar(62)  NOT NULL,
+    CITY varchar(28)  NOT NULL,
+    COUNTY varchar(25)  NOT NULL,
+    ST varchar(2)  NOT NULL,
+    ZIP varchar(9)  NOT NULL,
+    BIA_CODE varchar(3)  NULL,
+    TRIBE varchar(350)  NULL,
+    FEDERAL_FACILITY boolean  NOT NULL,
+    LATITUDE numeric  NOT NULL,
+    LONGITUDE numeric  NOT NULL,
+    NIACS_ID varchar  NOT NULL,
+    PARENT_COMPANY_NAME varchar(60)  NOT NULL,
+    PARENT_COMPANY_DB_NUMBER varchar(60)  NULL,
+    CONSTRAINT TRI_FACILITY_pk PRIMARY KEY (TRI_FACILITY_ID)
+);
+COMMENT ON TABLE TRI_FACILITY IS 'The TRI Facility Identification Number assigned by EPA/TRI.';
+
+
+
+
+INSERT INTO tri_facility(tri_facility_id, facility_name, street_address, city, county, 
+st, zip, bia_code, tribe, federal_facility, latitude, longitude, 
+niacs_id, parent_company_name, parent_company_db_number)
+ (SELECT DISTINCT ON (tri_facility_id) tri_facility_id, facility_name, street_address, city, county, st, zip, bia_code, tribe, (federal_facility::bool), (latitude::numeric), (longitude::numeric), (
+primary_naics || naics_2 ||naics_3|| naics_4|| naics_5 || naics_6) as niacs_id,
+ parent_company_name, parent_company_db_number FROM tri_data_temp
+where latitude != (''));
+
+
+CREATE INDEX idx_tri_facility ON TRI_FACILITY (tri_facility_id);
+
+
+
+ALTER TABLE tri_facility ADD COLUMN geom geometry(POINT,4326);
+UPDATEtri_facility SET geom = ST_SetSRID(ST_MakePoint(longitude,latitude),4326);
+CREATE INDEX idx_tri_geom ON tri_facility USING GIST(geom);
+ALTER TABLE tri_facility ALTER COLUMN longitude TYPE varchar;
+ALTER TABLE tri_facility ALTER COLUMN latitude TYPE varchar;
+
+
+
+CREATE TABLE TRI_FACILITY_no_xy (
+    TRI_FACILITY_ID varchar(15)  primary key,
+    FACILITY_NAME varchar(62)  NOT NULL,
+    STREET_ADDRESS varchar(62)  NOT NULL,
+    CITY varchar(28)  NOT NULL,
+    COUNTY varchar(25)  NOT NULL,
+    ST varchar(2)  NOT NULL,
+    ZIP varchar(9)  NOT NULL,
+    BIA_CODE varchar(3)  NULL,
+    TRIBE varchar(350)  NULL,
+    FEDERAL_FACILITY boolean  NOT NULL,
+    LATITUDE varchar,
+    LONGITUDE varchar,
+    NIACS_ID varchar  NOT NULL,
+    PARENT_COMPANY_NAME varchar(60)  NOT NULL,
+    PARENT_COMPANY_DB_NUMBER varchar(60)  NULL
+);
+COMMENT ON TABLE TRI_FACILITY_no_xy  IS 'TRI_facilities with no lat long included';
+
+INSERT INTO tri_facility_no_xy (tri_facility_id, facility_name, street_address, city, county, 
+st, zip, bia_code, tribe, federal_facility, latitude, longitude, 
+niacs_id, parent_company_name, parent_company_db_number)
+ (SELECT DISTINCT ON (tri_facility_id) tri_facility_id, facility_name, street_address, city, county, st, zip, bia_code, tribe, (federal_facility::bool), latitude, longitude, (
+primary_naics || naics_2 ||naics_3|| naics_4|| naics_5 || naics_6) as niacs_id,
+ parent_company_name, parent_company_db_number FROM tri_data_temp
+where latitude = (''));

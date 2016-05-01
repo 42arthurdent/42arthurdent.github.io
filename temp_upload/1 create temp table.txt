@@ -1,0 +1,136 @@
+/* is this needed?
+CREATE EXTENSION postgis;
+ SELECT postgis_full_version();
+*/
+
+create schema if not exists tri_data;
+set schema 'tri_data';
+DROP TABLE tri_pa_data_temp;
+
+
+set schema 'scratch';
+
+
+set schema 'public';
+CREATE TABLE TRI_DATA_temp (
+    YEAR varchar,
+    TRI_FACILITY_ID varchar NOT NULL,
+    FACILITY_NAME varchar,
+    STREET_ADDRESS varchar,
+    CITY varchar,
+    COUNTY varchar,
+    ST varchar,
+    ZIP varchar,
+    BIA_CODE varchar,
+    TRIBE varchar,
+    LATITUDE varchar,
+    LONGITUDE varchar,
+    FEDERAL_FACILITY varchar,
+    PRIMARY_SIC varchar,
+    SIC_2 varchar,
+    SIC_3 varchar,
+    SIC_4 varchar,
+    SIC_5 varchar,
+    SIC_6 varchar,
+    PRIMARY_NAICS varchar,
+    NAICS_2 varchar,
+    NAICS_3 varchar,
+    NAICS_4 varchar,
+    NAICS_5 varchar,
+    NAICS_6 varchar,
+    DOC_CTRL_NUM varchar,
+    CHEMICAL varchar,
+    CAS_NUM_COMPOUND_ID varchar,
+    CLEAn_AIR_ACT_CHEMICAL varchar,
+    CLASSIFICATION varchar,
+    METAL varchar,
+    METAL_CATEGORY varchar,
+    CARCINOGEN varchar,
+    FORM_TYPE varchar,
+    UNIT_OF_MEASURE varchar,
+    FUGITIVE_AIR_5_1 varchar,
+    STACK_AIR_5_2 varchar,
+    WATER_5_3 varchar,
+    UNDERGROUND_CLASS_I_5_4_1 varchar,
+    UNDERGROUND_CLASS_II_V_5_4_2 varchar,
+    RCRA_C_LANDFILLS_5_5_1A varchar,
+    OTHER_LANDFILLS_5_5_1B varchar,
+    LAND_TREATMENT_5_5_2 varchar,
+    SURFACE_IMPOUNDMENT_5_5_3 varchar,
+    A_RCRA_C_SURFACE_IMP_5_5_3 varchar,
+    B_Other_SURFACE_IMP_5_5_3 varchar,
+    OTHER_DISPOSAL_5_5_4_ varchar,
+    ON_SITE_RELEASE_TOTAL varchar,
+    POTW_TRANSFERS_FOR_RELEASE_6_1 varchar,
+    POTW_TRANSFERS_FOR_TREATM_6_1 varchar,
+    POTW_TOTAL_TRANSFERS_6_1 varchar,
+    M10_6_2 varchar,
+    M41_6_2 varchar,
+    M62_6_2 varchar,
+    M71_6_2 varchar,
+    M81_6_2 varchar,
+    M82_6_2 varchar,
+    M72_6_2 varchar,
+    M63_6_2 varchar,
+    M66_6_2 varchar,
+    M67_6_2 varchar,
+    M64_6_2 varchar,
+    M65_6_2 varchar,
+    M73_6_2 varchar,
+    M79_6_2 varchar,
+    M90_6_2 varchar,
+    M94_6_2 varchar,
+    M99_6_2 varchar,
+    OFF_SITE_RELEASE_TOTAL varchar,
+    M20_6_2 varchar,
+    M24_6_2 varchar,
+    M26_6_2 varchar,
+    M28_6_2 varchar,
+    M93_6_2 varchar,
+    OFF_SITE_RECYCLED_TOTAL varchar,
+    M56_6_2 varchar,
+    M92_6_2 varchar,
+    OFF_SITE_RECOVERY_TOTAL varchar,
+    M40_6_2 varchar,
+    M50_6_2 varchar,
+    M54_6_2 varchar,
+    M61_6_2 varchar,
+    M69_6_2 varchar,
+    M95_6_2 varchar,
+    OFF_SITE_TREATED_TOTAL varchar,
+    TOTAL_RELEASES varchar,
+    RELEASES_8_1 varchar,
+    ON_SITE_CONTAINED_REL_8_1A varchar,
+    ON_SITE_OTHER_RELEASES_8_1B varchar,
+    OFF_SITE_CONTAINED_REL_8_1C varchar,
+    OFF_SITE_OTHER_RELEASES_8_1D varchar,
+    ENERGY_RECOVERY_ON_SITE_8_2 varchar,
+    ENERGY_RECOVERY_OFF_SITE_8_3 varchar,
+    RECYCLING_ON_SITE_8_4 varchar,
+    RECYCLING_OFF_SITE_8_5 varchar,
+    TREATMENT_ON_SITE_8_6 varchar,
+    TREATMENT_OFF_SITE_8_7 varchar,
+    PROD__WASTE_8_1_THRU_8_7 varchar,
+    ONE_TIME_RELEASE_8_8 varchar,
+    PRODUCTION_RATIO_8_9 varchar,
+    PARENT_COMPANY_NAME varchar,
+    PARENT_COMPANY_DB_NUMBER varchar
+);
+
+/* update file name */ 
+\copy TRI_DATA_temp FROM 'C:\input\tri_2014_pa.csv' WITH DELIMITER ',' CSV HEADER;
+
+\copy TRI_DATA_temp FROM 'C:\input\tri_2014_us.csv' WITH DELIMITER ',' CSV HEADER;
+
+
+
+UPDATE tri_data_temp
+   SET one_time_release_8_8=0        
+ WHERE one_time_release_8_8 = ('');
+
+UPDATE tri_data_temp
+   SET production_ratio_8_9=0        
+ WHERE production_ratio_8_9=  ('');
+
+
+

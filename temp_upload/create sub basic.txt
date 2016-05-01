@@ -1,0 +1,15 @@
+CREATE TABLE SUBMITTAL_BASIC (
+DOC_CTRL_NUM varchar(13)  primary key,
+TRI_FACILITY_ID varchar(15)  NOT NULL,
+YEAR varchar(4)  NOT NULL,
+CAS_NUM_COMPOUND_ID varchar(9)  NOT NULL,
+FORM_TYPE varchar(1)  NOT NULL
+);
+COMMENT ON TABLE SUBMITTAL_BASIC IS 'The Document Control Number is a unique ID that is assigned to each form.';
+
+INSERT INTO submittal_basic(
+ doc_ctrl_num, tri_facility_id, year, cas_num_compound_id, form_type)
+ (SELECT doc_ctrl_num, tri_facility_id, year, cas_num_compound_id, form_type
+ FROM tri_data_temp);
+
+ CREATE INDEX idx_SUBMITTAL_BASIC ON SUBMITTAL_BASIC (DOC_CTRL_NUM);
