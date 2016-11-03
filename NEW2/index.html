@@ -1,0 +1,5735 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css" />
+        
+        <link rel="stylesheet" href="css/MarkerCluster.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet-heat.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/OSMBuildings-Leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <style>
+       
+		body { background-color: azure;}
+		h1 { text-align: center;}
+        </style>
+        <title>ERTAC EGU </title>
+    </head>
+    <body>
+	
+      
+        <h1>2015 Annual ERTAC and IPM Modeling results vs <br /> the actual CAMD reported values</h1>
+		<div style="display:flex;justify-content:center;align-items:center;">
+			<div id='map' style="height:800px; width:12000px">
+			</div>
+        <script src="data/json_IosNo0.js"></script>
+        <script src="data/json_IaNO1.js"></script>
+        <script src="data/json_CosNo2.js"></script>
+        <script src="data/json_CaNo3.js"></script>
+        <script src="data/json_EosNox4.js"></script>
+        <script src="data/json_EaNox5.js"></script>
+        <script src="data/json_E17osNoL26.js"></script>
+        <script src="data/json_E17aNoL27.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var feature_group = new L.featureGroup([]);
+        var bounds_group = new L.featureGroup([]);
+        var raster_group = new L.LayerGroup([]);
+        var basemap0 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> , >ADAM</a>',
+            maxZoom:15
+        })
+		var mbAttr = '&copy; <a href="https://www.mapbox.com/">MapBox</a>,>ADAM</a>',
+		mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiNDJhcnRodXJkZW50IiwiYSI6ImNpbHk2cWZ5MDA1dzI4M2tzN3NrcGp3cXUifQ.IVHPZyM8rvKuYKcfSzPFEQ';
+		var pirates  = L.tileLayer(mbUrl, {id: 'mapbox.pirates',   attribution: mbAttr, maxZoom:15})
+		;
+        basemap0.addTo(map);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        function geoJson2heat(geojson, weight) {
+          return geojson.features.map(function(feature) {
+            return [
+              feature.geometry.coordinates[1],
+              feature.geometry.coordinates[0],
+              feature.properties[weight]
+            ];
+          });
+        }
+        function pop_IosNo0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><td colspan="2">' 
+ + (feature.properties['ORIS'] !== null ? Autolinker.link(String(feature.properties['ORIS'])) : '') 
+ + '</td></tr><tr><td colspan="2">' 
+ + (feature.properties['Facility'] !== null ? Autolinker.link(String(feature.properties['Facility'])) : '') 
+// + '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['IaHI'] !== null ? Autolinker.link(String(feature.properties['IaHI'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['IaNox'] !== null ? Autolinker.link(String(feature.properties['IaNox'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'IPM OS HI ' +
+ + (feature.properties['IosHI'] !== null ? Autolinker.link(String(feature.properties['IosHI'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'IPM OS NOx ' +
+ + (feature.properties['IosNox'] !== null ? Autolinker.link(String(feature.properties['IosNox'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Latitude'] !== null ? Autolinker.link(String(feature.properties['Latitude'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Longitude'] !== null ? Autolinker.link(String(feature.properties['Longitude'])) : '') 
+ + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleIosNo0(feature) {
+        if (feature.properties['IosNox'] >= 0.0 &&
+                feature.properties['IosNox'] <= 0.0) {
+
+            return {
+                radius: 0.0,
+                fillColor: '#000000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.0',
+                opacity: '0.0',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 0.0 &&
+                feature.properties['IosNox'] <= 27.650283) {
+
+            return {
+                radius: 2.0,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 27.650283 &&
+                feature.properties['IosNox'] <= 55.300566) {
+
+            return {
+                radius: 2.97778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 55.300566 &&
+                feature.properties['IosNox'] <= 82.95085) {
+
+            return {
+                radius: 3.95556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 82.95085 &&
+                feature.properties['IosNox'] <= 110.601133) {
+
+            return {
+                radius: 4.93334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 110.601133 &&
+                feature.properties['IosNox'] <= 138.251416) {
+
+            return {
+                radius: 5.91112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 138.251416 &&
+                feature.properties['IosNox'] <= 165.901699) {
+
+            return {
+                radius: 6.88888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 165.901699 &&
+                feature.properties['IosNox'] <= 193.551982) {
+
+            return {
+                radius: 7.86666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 193.551982 &&
+                feature.properties['IosNox'] <= 221.202266) {
+
+            return {
+                radius: 8.84444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 221.202266 &&
+                feature.properties['IosNox'] <= 248.852549) {
+
+            return {
+                radius: 9.82222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 248.852549 &&
+                feature.properties['IosNox'] <= 276.502832) {
+
+            return {
+                radius: 10.8,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 276.502832 &&
+                feature.properties['IosNox'] <= 304.153115) {
+
+            return {
+                radius: 11.77778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 304.153115 &&
+                feature.properties['IosNox'] <= 331.803398) {
+
+            return {
+                radius: 12.75556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 331.803398 &&
+                feature.properties['IosNox'] <= 359.453682) {
+
+            return {
+                radius: 13.73334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 359.453682 &&
+                feature.properties['IosNox'] <= 387.103965) {
+
+            return {
+                radius: 14.71112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 387.103965 &&
+                feature.properties['IosNox'] <= 414.754248) {
+
+            return {
+                radius: 15.68888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 414.754248 &&
+                feature.properties['IosNox'] <= 442.404531) {
+
+            return {
+                radius: 16.66666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 442.404531 &&
+                feature.properties['IosNox'] <= 470.054814) {
+
+            return {
+                radius: 17.64444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 470.054814 &&
+                feature.properties['IosNox'] <= 497.705098) {
+
+            return {
+                radius: 18.62222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 497.705098 &&
+                feature.properties['IosNox'] <= 525.355381) {
+
+            return {
+                radius: 19.6,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 525.355381 &&
+                feature.properties['IosNox'] <= 553.005664) {
+
+            return {
+                radius: 20.5778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 553.005664 &&
+                feature.properties['IosNox'] <= 580.655947) {
+
+            return {
+                radius: 21.5556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 580.655947 &&
+                feature.properties['IosNox'] <= 608.30623) {
+
+            return {
+                radius: 22.5334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 608.30623 &&
+                feature.properties['IosNox'] <= 635.956513) {
+
+            return {
+                radius: 23.5112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 635.956513 &&
+                feature.properties['IosNox'] <= 663.606797) {
+
+            return {
+                radius: 24.4888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 663.606797 &&
+                feature.properties['IosNox'] <= 691.25708) {
+
+            return {
+                radius: 25.4666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 691.25708 &&
+                feature.properties['IosNox'] <= 718.907363) {
+
+            return {
+                radius: 26.4444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 718.907363 &&
+                feature.properties['IosNox'] <= 746.557646) {
+
+            return {
+                radius: 27.4222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 746.557646 &&
+                feature.properties['IosNox'] <= 774.207929) {
+
+            return {
+                radius: 28.4,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 774.207929 &&
+                feature.properties['IosNox'] <= 801.858213) {
+
+            return {
+                radius: 29.3778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 801.858213 &&
+                feature.properties['IosNox'] <= 829.508496) {
+
+            return {
+                radius: 30.3556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 829.508496 &&
+                feature.properties['IosNox'] <= 857.158779) {
+
+            return {
+                radius: 31.3334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 857.158779 &&
+                feature.properties['IosNox'] <= 884.809062) {
+
+            return {
+                radius: 32.3112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 884.809062 &&
+                feature.properties['IosNox'] <= 912.459345) {
+
+            return {
+                radius: 33.2888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 912.459345 &&
+                feature.properties['IosNox'] <= 940.109629) {
+
+            return {
+                radius: 34.2666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 940.109629 &&
+                feature.properties['IosNox'] <= 967.759912) {
+
+            return {
+                radius: 35.2444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 967.759912 &&
+                feature.properties['IosNox'] <= 995.410195) {
+
+            return {
+                radius: 36.2222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 995.410195 &&
+                feature.properties['IosNox'] <= 1023.060478) {
+
+            return {
+                radius: 37.2,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 1023.060478 &&
+                feature.properties['IosNox'] <= 1050.710761) {
+
+            return {
+                radius: 38.1778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 1050.710761 &&
+                feature.properties['IosNox'] <= 1078.361045) {
+
+            return {
+                radius: 39.1556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 1078.361045 &&
+                feature.properties['IosNox'] <= 1106.011328) {
+
+            return {
+                radius: 40.1334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 1106.011328 &&
+                feature.properties['IosNox'] <= 1133.661611) {
+
+            return {
+                radius: 41.1112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 1133.661611 &&
+                feature.properties['IosNox'] <= 1161.311894) {
+
+            return {
+                radius: 42.0888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 1161.311894 &&
+                feature.properties['IosNox'] <= 1188.962177) {
+
+            return {
+                radius: 43.0666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 1188.962177 &&
+                feature.properties['IosNox'] <= 1216.612461) {
+
+            return {
+                radius: 44.0444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 1216.612461 &&
+                feature.properties['IosNox'] <= 1244.262744) {
+
+            return {
+                radius: 45.0222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IosNox'] >= 1244.262744 &&
+                feature.properties['IosNox'] <= 1271.913027) {
+
+            return {
+                radius: 46.0,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        }
+        map.createPane('pane_IosNo0');
+        map.getPane('pane_IosNo0').style.zIndex = 601;
+        var json_IosNo0JSON = new L.geoJson(json_IosNo0, {
+            pane: 'pane_IosNo0',
+            onEachFeature: pop_IosNo0,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, doStyleIosNo0(feature))
+            }
+        });
+        bounds_group.addLayer(json_IosNo0JSON);
+        function pop_IaNO1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><td colspan="2">' 
+ + (feature.properties['ORIS'] !== null ? Autolinker.link(String(feature.properties['ORIS'])) : '') 
+ + '</td></tr><tr><td colspan="2">' 
+ + (feature.properties['Facility'] !== null ? Autolinker.link(String(feature.properties['Facility'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'IPM annual HI ' +
+ + (feature.properties['IaHI'] !== null ? Autolinker.link(String(feature.properties['IaHI'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'IPM annual NOx ' +
+ + (feature.properties['IaNox'] !== null ? Autolinker.link(String(feature.properties['IaNox'])) : '') 
+ + '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['IosHI'] !== null ? Autolinker.link(String(feature.properties['IosHI'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['IosNox'] !== null ? Autolinker.link(String(feature.properties['IosNox'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Latitude'] !== null ? Autolinker.link(String(feature.properties['Latitude'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+// + (feature.properties['Longitude'] !== null ? Autolinker.link(String(feature.properties['Longitude'])) : '') 
+ + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleIaNO1(feature) {
+        if (feature.properties['IaNox'] >= 0.0 &&
+                feature.properties['IaNox'] <= 0.0) {
+
+            return {
+                radius: 4.0,
+                fillColor: '#000000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.0',
+                opacity: '0.0',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 0.0 &&
+                feature.properties['IaNox'] <= 27.650283) {
+
+            return {
+                radius: 2.0,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 27.650283 &&
+                feature.properties['IaNox'] <= 55.300566) {
+
+            return {
+                radius: 2.97778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 55.300566 &&
+                feature.properties['IaNox'] <= 82.95085) {
+
+            return {
+                radius: 3.95556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 82.95085 &&
+                feature.properties['IaNox'] <= 110.601133) {
+
+            return {
+                radius: 4.93334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 110.601133 &&
+                feature.properties['IaNox'] <= 138.251416) {
+
+            return {
+                radius: 5.91112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 138.251416 &&
+                feature.properties['IaNox'] <= 165.901699) {
+
+            return {
+                radius: 6.88888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 165.901699 &&
+                feature.properties['IaNox'] <= 193.551982) {
+
+            return {
+                radius: 7.86666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 193.551982 &&
+                feature.properties['IaNox'] <= 221.202266) {
+
+            return {
+                radius: 8.84444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 221.202266 &&
+                feature.properties['IaNox'] <= 248.852549) {
+
+            return {
+                radius: 9.82222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 248.852549 &&
+                feature.properties['IaNox'] <= 276.502832) {
+
+            return {
+                radius: 10.8,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 276.502832 &&
+                feature.properties['IaNox'] <= 304.153115) {
+
+            return {
+                radius: 11.77778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 304.153115 &&
+                feature.properties['IaNox'] <= 331.803398) {
+
+            return {
+                radius: 12.75556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 331.803398 &&
+                feature.properties['IaNox'] <= 359.453682) {
+
+            return {
+                radius: 13.73334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 359.453682 &&
+                feature.properties['IaNox'] <= 387.103965) {
+
+            return {
+                radius: 14.71112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 387.103965 &&
+                feature.properties['IaNox'] <= 414.754248) {
+
+            return {
+                radius: 15.68888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 414.754248 &&
+                feature.properties['IaNox'] <= 442.404531) {
+
+            return {
+                radius: 16.66666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 442.404531 &&
+                feature.properties['IaNox'] <= 470.054814) {
+
+            return {
+                radius: 17.64444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 470.054814 &&
+                feature.properties['IaNox'] <= 497.705098) {
+
+            return {
+                radius: 18.62222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 497.705098 &&
+                feature.properties['IaNox'] <= 525.355381) {
+
+            return {
+                radius: 19.6,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 525.355381 &&
+                feature.properties['IaNox'] <= 553.005664) {
+
+            return {
+                radius: 20.5778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 553.005664 &&
+                feature.properties['IaNox'] <= 580.655947) {
+
+            return {
+                radius: 21.5556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 580.655947 &&
+                feature.properties['IaNox'] <= 608.30623) {
+
+            return {
+                radius: 22.5334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 608.30623 &&
+                feature.properties['IaNox'] <= 635.956513) {
+
+            return {
+                radius: 23.5112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 635.956513 &&
+                feature.properties['IaNox'] <= 663.606797) {
+
+            return {
+                radius: 24.4888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 663.606797 &&
+                feature.properties['IaNox'] <= 691.25708) {
+
+            return {
+                radius: 25.4666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 691.25708 &&
+                feature.properties['IaNox'] <= 718.907363) {
+
+            return {
+                radius: 26.4444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 718.907363 &&
+                feature.properties['IaNox'] <= 746.557646) {
+
+            return {
+                radius: 27.4222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 746.557646 &&
+                feature.properties['IaNox'] <= 774.207929) {
+
+            return {
+                radius: 28.4,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 774.207929 &&
+                feature.properties['IaNox'] <= 801.858213) {
+
+            return {
+                radius: 29.3778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 801.858213 &&
+                feature.properties['IaNox'] <= 829.508496) {
+
+            return {
+                radius: 30.3556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 829.508496 &&
+                feature.properties['IaNox'] <= 857.158779) {
+
+            return {
+                radius: 31.3334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 857.158779 &&
+                feature.properties['IaNox'] <= 884.809062) {
+
+            return {
+                radius: 32.3112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 884.809062 &&
+                feature.properties['IaNox'] <= 912.459345) {
+
+            return {
+                radius: 33.2888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 912.459345 &&
+                feature.properties['IaNox'] <= 940.109629) {
+
+            return {
+                radius: 34.2666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 940.109629 &&
+                feature.properties['IaNox'] <= 967.759912) {
+
+            return {
+                radius: 35.2444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 967.759912 &&
+                feature.properties['IaNox'] <= 995.410195) {
+
+            return {
+                radius: 36.2222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 995.410195 &&
+                feature.properties['IaNox'] <= 1023.060478) {
+
+            return {
+                radius: 37.2,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 1023.060478 &&
+                feature.properties['IaNox'] <= 1050.710761) {
+
+            return {
+                radius: 38.1778,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 1050.710761 &&
+                feature.properties['IaNox'] <= 1078.361045) {
+
+            return {
+                radius: 39.1556,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 1078.361045 &&
+                feature.properties['IaNox'] <= 1106.011328) {
+
+            return {
+                radius: 40.1334,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 1106.011328 &&
+                feature.properties['IaNox'] <= 1133.661611) {
+
+            return {
+                radius: 41.1112,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 1133.661611 &&
+                feature.properties['IaNox'] <= 1161.311894) {
+
+            return {
+                radius: 42.0888,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 1161.311894 &&
+                feature.properties['IaNox'] <= 1188.962177) {
+
+            return {
+                radius: 43.0666,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 1188.962177 &&
+                feature.properties['IaNox'] <= 1216.612461) {
+
+            return {
+                radius: 44.0444,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 1216.612461 &&
+                feature.properties['IaNox'] <= 1244.262744) {
+
+            return {
+                radius: 45.0222,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['IaNox'] >= 1244.262744 &&
+                feature.properties['IaNox'] <= 1271.913027) {
+
+            return {
+                radius: 46.0,
+                fillColor: '#e70000',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        }
+        map.createPane('pane_IaNO1');
+        map.getPane('pane_IaNO1').style.zIndex = 602;
+        var json_IaNO1JSON = new L.geoJson(json_IaNO1, {
+            pane: 'pane_IaNO1',
+            onEachFeature: pop_IaNO1,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, doStyleIaNO1(feature))
+            }
+        });
+        bounds_group.addLayer(json_IaNO1JSON);
+        function pop_CosNo2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><td colspan="2">' 
+ + (feature.properties['ORIS'] !== null ? Autolinker.link(String(feature.properties['ORIS'])) : '') 
+ + '</td></tr><tr><td colspan="2">' 
+ + (feature.properties['Facility'] !== null ? Autolinker.link(String(feature.properties['Facility'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['CaHI'] !== null ? Autolinker.link(String(feature.properties['CaHI'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+// + (feature.properties['CaNox'] !== null ? Autolinker.link(String(feature.properties['CaNox'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'CAMD OS HI ' +
+ + (feature.properties['CosHi'] !== null ? Autolinker.link(String(feature.properties['CosHi'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'CAMD OS NOx ' +
+ + (feature.properties['CosNox'] !== null ? Autolinker.link(String(feature.properties['CosNox'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Latitude'] !== null ? Autolinker.link(String(feature.properties['Latitude'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+// + (feature.properties['Longitude'] !== null ? Autolinker.link(String(feature.properties['Longitude'])) : '') 
+ + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleCosNo2(feature) {
+        if (feature.properties['CosNox'] >= 0.0 &&
+                feature.properties['CosNox'] <= 0.0) {
+
+            return {
+                radius: 0.0,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 0.0 &&
+                feature.properties['CosNox'] <= 27.650283) {
+
+            return {
+                radius: 2.0,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 27.650283 &&
+                feature.properties['CosNox'] <= 55.300566) {
+
+            return {
+                radius: 2.97778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 55.300566 &&
+                feature.properties['CosNox'] <= 82.95085) {
+
+            return {
+                radius: 3.95556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 82.95085 &&
+                feature.properties['CosNox'] <= 110.601133) {
+
+            return {
+                radius: 4.93334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 110.601133 &&
+                feature.properties['CosNox'] <= 138.251416) {
+
+            return {
+                radius: 5.91112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 138.251416 &&
+                feature.properties['CosNox'] <= 165.901699) {
+
+            return {
+                radius: 6.88888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 165.901699 &&
+                feature.properties['CosNox'] <= 193.551982) {
+
+            return {
+                radius: 7.86666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 193.551982 &&
+                feature.properties['CosNox'] <= 221.202266) {
+
+            return {
+                radius: 8.84444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 221.202266 &&
+                feature.properties['CosNox'] <= 248.852549) {
+
+            return {
+                radius: 9.82222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 248.852549 &&
+                feature.properties['CosNox'] <= 276.502832) {
+
+            return {
+                radius: 10.8,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 276.502832 &&
+                feature.properties['CosNox'] <= 304.153115) {
+
+            return {
+                radius: 11.77778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 304.153115 &&
+                feature.properties['CosNox'] <= 331.803398) {
+
+            return {
+                radius: 12.75556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 331.803398 &&
+                feature.properties['CosNox'] <= 359.453682) {
+
+            return {
+                radius: 13.73334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 359.453682 &&
+                feature.properties['CosNox'] <= 387.103965) {
+
+            return {
+                radius: 14.71112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 387.103965 &&
+                feature.properties['CosNox'] <= 414.754248) {
+
+            return {
+                radius: 15.68888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 414.754248 &&
+                feature.properties['CosNox'] <= 442.404531) {
+
+            return {
+                radius: 16.66666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 442.404531 &&
+                feature.properties['CosNox'] <= 470.054814) {
+
+            return {
+                radius: 17.64444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 470.054814 &&
+                feature.properties['CosNox'] <= 497.705098) {
+
+            return {
+                radius: 18.62222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 497.705098 &&
+                feature.properties['CosNox'] <= 525.355381) {
+
+            return {
+                radius: 19.6,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 525.355381 &&
+                feature.properties['CosNox'] <= 553.005664) {
+
+            return {
+                radius: 20.5778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 553.005664 &&
+                feature.properties['CosNox'] <= 580.655947) {
+
+            return {
+                radius: 21.5556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 580.655947 &&
+                feature.properties['CosNox'] <= 608.30623) {
+
+            return {
+                radius: 22.5334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 608.30623 &&
+                feature.properties['CosNox'] <= 635.956513) {
+
+            return {
+                radius: 23.5112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 635.956513 &&
+                feature.properties['CosNox'] <= 663.606797) {
+
+            return {
+                radius: 24.4888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 663.606797 &&
+                feature.properties['CosNox'] <= 691.25708) {
+
+            return {
+                radius: 25.4666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 691.25708 &&
+                feature.properties['CosNox'] <= 718.907363) {
+
+            return {
+                radius: 26.4444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 718.907363 &&
+                feature.properties['CosNox'] <= 746.557646) {
+
+            return {
+                radius: 27.4222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 746.557646 &&
+                feature.properties['CosNox'] <= 774.207929) {
+
+            return {
+                radius: 28.4,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 774.207929 &&
+                feature.properties['CosNox'] <= 801.858213) {
+
+            return {
+                radius: 29.3778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 801.858213 &&
+                feature.properties['CosNox'] <= 829.508496) {
+
+            return {
+                radius: 30.3556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 829.508496 &&
+                feature.properties['CosNox'] <= 857.158779) {
+
+            return {
+                radius: 31.3334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 857.158779 &&
+                feature.properties['CosNox'] <= 884.809062) {
+
+            return {
+                radius: 32.3112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 884.809062 &&
+                feature.properties['CosNox'] <= 912.459345) {
+
+            return {
+                radius: 33.2888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 912.459345 &&
+                feature.properties['CosNox'] <= 940.109629) {
+
+            return {
+                radius: 34.2666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 940.109629 &&
+                feature.properties['CosNox'] <= 967.759912) {
+
+            return {
+                radius: 35.2444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 967.759912 &&
+                feature.properties['CosNox'] <= 995.410195) {
+
+            return {
+                radius: 36.2222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 995.410195 &&
+                feature.properties['CosNox'] <= 1023.060478) {
+
+            return {
+                radius: 37.2,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 1023.060478 &&
+                feature.properties['CosNox'] <= 1050.710761) {
+
+            return {
+                radius: 38.1778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 1050.710761 &&
+                feature.properties['CosNox'] <= 1078.361045) {
+
+            return {
+                radius: 39.1556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 1078.361045 &&
+                feature.properties['CosNox'] <= 1106.011328) {
+
+            return {
+                radius: 40.1334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 1106.011328 &&
+                feature.properties['CosNox'] <= 1133.661611) {
+
+            return {
+                radius: 41.1112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 1133.661611 &&
+                feature.properties['CosNox'] <= 1161.311894) {
+
+            return {
+                radius: 42.0888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 1161.311894 &&
+                feature.properties['CosNox'] <= 1188.962177) {
+
+            return {
+                radius: 43.0666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 1188.962177 &&
+                feature.properties['CosNox'] <= 1216.612461) {
+
+            return {
+                radius: 44.0444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 1216.612461 &&
+                feature.properties['CosNox'] <= 1244.262744) {
+
+            return {
+                radius: 45.0222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CosNox'] >= 1244.262744 &&
+                feature.properties['CosNox'] <= 1271.913027) {
+
+            return {
+                radius: 46.0,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        }
+        map.createPane('pane_CosNo2');
+        map.getPane('pane_CosNo2').style.zIndex = 603;
+        var json_CosNo2JSON = new L.geoJson(json_CosNo2, {
+            pane: 'pane_CosNo2',
+            onEachFeature: pop_CosNo2,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, doStyleCosNo2(feature))
+            }
+        });
+        bounds_group.addLayer(json_CosNo2JSON);
+        feature_group.addLayer(json_CosNo2JSON);
+        function pop_CaNo3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><td colspan="2">' 
+  + (feature.properties['ORIS'] !== null ? Autolinker.link(String(feature.properties['ORIS'])) : '') 
+ + '</td></tr><tr><td colspan="2">' 
+ + (feature.properties['Facility'] !== null ? Autolinker.link(String(feature.properties['Facility'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'CAMD Annual HI ' +
+ + (feature.properties['CaHI'] !== null ? Autolinker.link(String(feature.properties['CaHI'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'CAMD Annual NOx ' +
+ + (feature.properties['CaNox'] !== null ? Autolinker.link(String(feature.properties['CaNox'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' + 'CAMD OS HI ' +
+ //+ (feature.properties['CosHi'] !== null ? Autolinker.link(String(feature.properties['CosHi'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' + 'CAMD OS NOx ' +
+ //+ (feature.properties['CosNox'] !== null ? Autolinker.link(String(feature.properties['CosNox'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Latitude'] !== null ? Autolinker.link(String(feature.properties['Latitude'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+// + (feature.properties['Longitude'] !== null ? Autolinker.link(String(feature.properties['Longitude'])) : '') 
+ + '</td></tr></table>';
+            
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleCaNo3(feature) {
+        if (feature.properties['CaNox'] >= 0.0 &&
+                feature.properties['CaNox'] <= 0.0) {
+
+            return {
+                radius: 0.0,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 0.0 &&
+                feature.properties['CaNox'] <= 27.650283) {
+
+            return {
+                radius: 2.0,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 27.650283 &&
+                feature.properties['CaNox'] <= 55.300566) {
+
+            return {
+                radius: 2.97778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 55.300566 &&
+                feature.properties['CaNox'] <= 82.95085) {
+
+            return {
+                radius: 3.95556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 82.95085 &&
+                feature.properties['CaNox'] <= 110.601133) {
+
+            return {
+                radius: 4.93334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 110.601133 &&
+                feature.properties['CaNox'] <= 138.251416) {
+
+            return {
+                radius: 5.91112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 138.251416 &&
+                feature.properties['CaNox'] <= 165.901699) {
+
+            return {
+                radius: 6.88888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 165.901699 &&
+                feature.properties['CaNox'] <= 193.551982) {
+
+            return {
+                radius: 7.86666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 193.551982 &&
+                feature.properties['CaNox'] <= 221.202266) {
+
+            return {
+                radius: 8.84444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 221.202266 &&
+                feature.properties['CaNox'] <= 248.852549) {
+
+            return {
+                radius: 9.82222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 248.852549 &&
+                feature.properties['CaNox'] <= 276.502832) {
+
+            return {
+                radius: 10.8,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 276.502832 &&
+                feature.properties['CaNox'] <= 304.153115) {
+
+            return {
+                radius: 11.77778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 304.153115 &&
+                feature.properties['CaNox'] <= 331.803398) {
+
+            return {
+                radius: 12.75556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 331.803398 &&
+                feature.properties['CaNox'] <= 359.453682) {
+
+            return {
+                radius: 13.73334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 359.453682 &&
+                feature.properties['CaNox'] <= 387.103965) {
+
+            return {
+                radius: 14.71112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 387.103965 &&
+                feature.properties['CaNox'] <= 414.754248) {
+
+            return {
+                radius: 15.68888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 414.754248 &&
+                feature.properties['CaNox'] <= 442.404531) {
+
+            return {
+                radius: 16.66666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 442.404531 &&
+                feature.properties['CaNox'] <= 470.054814) {
+
+            return {
+                radius: 17.64444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 470.054814 &&
+                feature.properties['CaNox'] <= 497.705098) {
+
+            return {
+                radius: 18.62222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 497.705098 &&
+                feature.properties['CaNox'] <= 525.355381) {
+
+            return {
+                radius: 19.6,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 525.355381 &&
+                feature.properties['CaNox'] <= 553.005664) {
+
+            return {
+                radius: 20.5778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 553.005664 &&
+                feature.properties['CaNox'] <= 580.655947) {
+
+            return {
+                radius: 21.5556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 580.655947 &&
+                feature.properties['CaNox'] <= 608.30623) {
+
+            return {
+                radius: 22.5334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 608.30623 &&
+                feature.properties['CaNox'] <= 635.956513) {
+
+            return {
+                radius: 23.5112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 635.956513 &&
+                feature.properties['CaNox'] <= 663.606797) {
+
+            return {
+                radius: 24.4888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 663.606797 &&
+                feature.properties['CaNox'] <= 691.25708) {
+
+            return {
+                radius: 25.4666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 691.25708 &&
+                feature.properties['CaNox'] <= 718.907363) {
+
+            return {
+                radius: 26.4444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 718.907363 &&
+                feature.properties['CaNox'] <= 746.557646) {
+
+            return {
+                radius: 27.4222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 746.557646 &&
+                feature.properties['CaNox'] <= 774.207929) {
+
+            return {
+                radius: 28.4,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 774.207929 &&
+                feature.properties['CaNox'] <= 801.858213) {
+
+            return {
+                radius: 29.3778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 801.858213 &&
+                feature.properties['CaNox'] <= 829.508496) {
+
+            return {
+                radius: 30.3556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 829.508496 &&
+                feature.properties['CaNox'] <= 857.158779) {
+
+            return {
+                radius: 31.3334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 857.158779 &&
+                feature.properties['CaNox'] <= 884.809062) {
+
+            return {
+                radius: 32.3112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 884.809062 &&
+                feature.properties['CaNox'] <= 912.459345) {
+
+            return {
+                radius: 33.2888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 912.459345 &&
+                feature.properties['CaNox'] <= 940.109629) {
+
+            return {
+                radius: 34.2666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 940.109629 &&
+                feature.properties['CaNox'] <= 967.759912) {
+
+            return {
+                radius: 35.2444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 967.759912 &&
+                feature.properties['CaNox'] <= 995.410195) {
+
+            return {
+                radius: 36.2222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 995.410195 &&
+                feature.properties['CaNox'] <= 1023.060478) {
+
+            return {
+                radius: 37.2,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 1023.060478 &&
+                feature.properties['CaNox'] <= 1050.710761) {
+
+            return {
+                radius: 38.1778,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 1050.710761 &&
+                feature.properties['CaNox'] <= 1078.361045) {
+
+            return {
+                radius: 39.1556,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 1078.361045 &&
+                feature.properties['CaNox'] <= 1106.011328) {
+
+            return {
+                radius: 40.1334,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 1106.011328 &&
+                feature.properties['CaNox'] <= 1133.661611) {
+
+            return {
+                radius: 41.1112,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 1133.661611 &&
+                feature.properties['CaNox'] <= 1161.311894) {
+
+            return {
+                radius: 42.0888,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 1161.311894 &&
+                feature.properties['CaNox'] <= 1188.962177) {
+
+            return {
+                radius: 43.0666,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 1188.962177 &&
+                feature.properties['CaNox'] <= 1216.612461) {
+
+            return {
+                radius: 44.0444,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 1216.612461 &&
+                feature.properties['CaNox'] <= 1244.262744) {
+
+            return {
+                radius: 45.0222,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['CaNox'] >= 1244.262744 &&
+                feature.properties['CaNox'] <= 1271.913027) {
+
+            return {
+                radius: 46.0,
+                fillColor: '#1f78b4',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        }
+        map.createPane('pane_CaNo3');
+        map.getPane('pane_CaNo3').style.zIndex = 604;
+        var json_CaNo3JSON = new L.geoJson(json_CaNo3, {
+            pane: 'pane_CaNo3',
+            onEachFeature: pop_CaNo3,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, doStyleCaNo3(feature))
+            }
+        });
+        bounds_group.addLayer(json_CaNo3JSON);
+        feature_group.addLayer(json_CaNo3JSON);
+        function pop_EosNox4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><td colspan="2">' 
+ + (feature.properties['ORIS'] !== null ? Autolinker.link(String(feature.properties['ORIS'])) : '') 
+ + '</td></tr><tr><td colspan="2">' 
+ + (feature.properties['Facility'] !== null ? Autolinker.link(String(feature.properties['Facility'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['EHI'] !== null ? Autolinker.link(String(feature.properties['EHI'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['EaNox'] !== null ? Autolinker.link(String(feature.properties['EaNox'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'ERTAC 2015 OS HI ' +
+ + (feature.properties['EosHI'] !== null ? Autolinker.link(String(feature.properties['EosHI'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'ERTAC 2015 OS NOx ' +
+ + (feature.properties['EosNOx'] !== null ? Autolinker.link(String(feature.properties['EosNOx'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Latitude'] !== null ? Autolinker.link(String(feature.properties['Latitude'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+// + (feature.properties['Longitude'] !== null ? Autolinker.link(String(feature.properties['Longitude'])) : '') 
+ + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleEosNox4(feature) {
+        if (feature.properties['EosNOx'] >= 0.0 &&
+                feature.properties['EosNOx'] <= 0.0) {
+
+            return {
+                radius: 0.0,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 0.0 &&
+                feature.properties['EosNOx'] <= 27.650283) {
+
+            return {
+                radius: 2.0,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 27.650283 &&
+                feature.properties['EosNOx'] <= 55.300566) {
+
+            return {
+                radius: 2.97778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 55.300566 &&
+                feature.properties['EosNOx'] <= 82.95085) {
+
+            return {
+                radius: 3.95556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 82.95085 &&
+                feature.properties['EosNOx'] <= 110.601133) {
+
+            return {
+                radius: 4.93334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 110.601133 &&
+                feature.properties['EosNOx'] <= 138.251416) {
+
+            return {
+                radius: 5.91112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 138.251416 &&
+                feature.properties['EosNOx'] <= 165.901699) {
+
+            return {
+                radius: 6.88888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 165.901699 &&
+                feature.properties['EosNOx'] <= 193.551982) {
+
+            return {
+                radius: 7.86666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 193.551982 &&
+                feature.properties['EosNOx'] <= 221.202266) {
+
+            return {
+                radius: 8.84444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 221.202266 &&
+                feature.properties['EosNOx'] <= 248.852549) {
+
+            return {
+                radius: 9.82222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 248.852549 &&
+                feature.properties['EosNOx'] <= 276.502832) {
+
+            return {
+                radius: 10.8,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 276.502832 &&
+                feature.properties['EosNOx'] <= 304.153115) {
+
+            return {
+                radius: 11.77778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 304.153115 &&
+                feature.properties['EosNOx'] <= 331.803398) {
+
+            return {
+                radius: 12.75556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 331.803398 &&
+                feature.properties['EosNOx'] <= 359.453682) {
+
+            return {
+                radius: 13.73334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 359.453682 &&
+                feature.properties['EosNOx'] <= 387.103965) {
+
+            return {
+                radius: 14.71112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 387.103965 &&
+                feature.properties['EosNOx'] <= 414.754248) {
+
+            return {
+                radius: 15.68888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 414.754248 &&
+                feature.properties['EosNOx'] <= 442.404531) {
+
+            return {
+                radius: 16.66666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 442.404531 &&
+                feature.properties['EosNOx'] <= 470.054814) {
+
+            return {
+                radius: 17.64444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 470.054814 &&
+                feature.properties['EosNOx'] <= 497.705098) {
+
+            return {
+                radius: 18.62222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 497.705098 &&
+                feature.properties['EosNOx'] <= 525.355381) {
+
+            return {
+                radius: 19.6,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 525.355381 &&
+                feature.properties['EosNOx'] <= 553.005664) {
+
+            return {
+                radius: 20.5778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 553.005664 &&
+                feature.properties['EosNOx'] <= 580.655947) {
+
+            return {
+                radius: 21.5556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 580.655947 &&
+                feature.properties['EosNOx'] <= 608.30623) {
+
+            return {
+                radius: 22.5334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 608.30623 &&
+                feature.properties['EosNOx'] <= 635.956513) {
+
+            return {
+                radius: 23.5112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 635.956513 &&
+                feature.properties['EosNOx'] <= 663.606797) {
+
+            return {
+                radius: 24.4888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 663.606797 &&
+                feature.properties['EosNOx'] <= 691.25708) {
+
+            return {
+                radius: 25.4666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 691.25708 &&
+                feature.properties['EosNOx'] <= 718.907363) {
+
+            return {
+                radius: 26.4444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 718.907363 &&
+                feature.properties['EosNOx'] <= 746.557646) {
+
+            return {
+                radius: 27.4222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 746.557646 &&
+                feature.properties['EosNOx'] <= 774.207929) {
+
+            return {
+                radius: 28.4,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 774.207929 &&
+                feature.properties['EosNOx'] <= 801.858213) {
+
+            return {
+                radius: 29.3778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 801.858213 &&
+                feature.properties['EosNOx'] <= 829.508496) {
+
+            return {
+                radius: 30.3556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 829.508496 &&
+                feature.properties['EosNOx'] <= 857.158779) {
+
+            return {
+                radius: 31.3334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 857.158779 &&
+                feature.properties['EosNOx'] <= 884.809062) {
+
+            return {
+                radius: 32.3112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 884.809062 &&
+                feature.properties['EosNOx'] <= 912.459345) {
+
+            return {
+                radius: 33.2888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 912.459345 &&
+                feature.properties['EosNOx'] <= 940.109629) {
+
+            return {
+                radius: 34.2666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 940.109629 &&
+                feature.properties['EosNOx'] <= 967.759912) {
+
+            return {
+                radius: 35.2444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 967.759912 &&
+                feature.properties['EosNOx'] <= 995.410195) {
+
+            return {
+                radius: 36.2222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 995.410195 &&
+                feature.properties['EosNOx'] <= 1023.060478) {
+
+            return {
+                radius: 37.2,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 1023.060478 &&
+                feature.properties['EosNOx'] <= 1050.710761) {
+
+            return {
+                radius: 38.1778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 1050.710761 &&
+                feature.properties['EosNOx'] <= 1078.361045) {
+
+            return {
+                radius: 39.1556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 1078.361045 &&
+                feature.properties['EosNOx'] <= 1106.011328) {
+
+            return {
+                radius: 40.1334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 1106.011328 &&
+                feature.properties['EosNOx'] <= 1133.661611) {
+
+            return {
+                radius: 41.1112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 1133.661611 &&
+                feature.properties['EosNOx'] <= 1161.311894) {
+
+            return {
+                radius: 42.0888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 1161.311894 &&
+                feature.properties['EosNOx'] <= 1188.962177) {
+
+            return {
+                radius: 43.0666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 1188.962177 &&
+                feature.properties['EosNOx'] <= 1216.612461) {
+
+            return {
+                radius: 44.0444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 1216.612461 &&
+                feature.properties['EosNOx'] <= 1244.262744) {
+
+            return {
+                radius: 45.0222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EosNOx'] >= 1244.262744 &&
+                feature.properties['EosNOx'] <= 1271.913027) {
+
+            return {
+                radius: 46.0,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        }
+        map.createPane('pane_EosNox4');
+        map.getPane('pane_EosNox4').style.zIndex = 605;
+        var json_EosNox4JSON = new L.geoJson(json_EosNox4, {
+            pane: 'pane_EosNox4',
+            onEachFeature: pop_EosNox4,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, doStyleEosNox4(feature))
+            }
+        });
+        bounds_group.addLayer(json_EosNox4JSON);
+        function pop_EaNox5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><td colspan="2">' 
+ + (feature.properties['ORIS'] !== null ? Autolinker.link(String(feature.properties['ORIS'])) : '') 
+ + '</td></tr><tr><td colspan="2">' 
+ + (feature.properties['Facility'] !== null ? Autolinker.link(String(feature.properties['Facility'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'ERTAC 2015 annual HI ' +
++ (feature.properties['EHI'] !== null ? Autolinker.link(String(feature.properties['EHI'])) : '') 
++ '</td></tr><tr><td colspan="2">' + 'ERTAC 2015 annual NOx ' +
++ (feature.properties['EaNox'] !== null ? Autolinker.link(String(feature.properties['EaNox'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['EosHI'] !== null ? Autolinker.link(String(feature.properties['EosHI'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+// + (feature.properties['EosNOx'] !== null ? Autolinker.link(String(feature.properties['EosNOx'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Latitude'] !== null ? Autolinker.link(String(feature.properties['Latitude'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+// + (feature.properties['Longitude'] !== null ? Autolinker.link(String(feature.properties['Longitude'])) : '') 
+ + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleEaNox5(feature) {
+        if (feature.properties['EaNox'] >= 0.0 &&
+                feature.properties['EaNox'] <= 0.0) {
+
+            return {
+                radius: 0.0,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 0.0 &&
+                feature.properties['EaNox'] <= 27.650283) {
+
+            return {
+                radius: 2.0,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 27.650283 &&
+                feature.properties['EaNox'] <= 55.300566) {
+
+            return {
+                radius: 2.97778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 55.300566 &&
+                feature.properties['EaNox'] <= 82.95085) {
+
+            return {
+                radius: 3.95556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 82.95085 &&
+                feature.properties['EaNox'] <= 110.601133) {
+
+            return {
+                radius: 4.93334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 110.601133 &&
+                feature.properties['EaNox'] <= 138.251416) {
+
+            return {
+                radius: 5.91112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 138.251416 &&
+                feature.properties['EaNox'] <= 165.901699) {
+
+            return {
+                radius: 6.88888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 165.901699 &&
+                feature.properties['EaNox'] <= 193.551982) {
+
+            return {
+                radius: 7.86666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 193.551982 &&
+                feature.properties['EaNox'] <= 221.202266) {
+
+            return {
+                radius: 8.84444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 221.202266 &&
+                feature.properties['EaNox'] <= 248.852549) {
+
+            return {
+                radius: 9.82222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 248.852549 &&
+                feature.properties['EaNox'] <= 276.502832) {
+
+            return {
+                radius: 10.8,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 276.502832 &&
+                feature.properties['EaNox'] <= 304.153115) {
+
+            return {
+                radius: 11.77778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 304.153115 &&
+                feature.properties['EaNox'] <= 331.803398) {
+
+            return {
+                radius: 12.75556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 331.803398 &&
+                feature.properties['EaNox'] <= 359.453682) {
+
+            return {
+                radius: 13.73334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 359.453682 &&
+                feature.properties['EaNox'] <= 387.103965) {
+
+            return {
+                radius: 14.71112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 387.103965 &&
+                feature.properties['EaNox'] <= 414.754248) {
+
+            return {
+                radius: 15.68888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 414.754248 &&
+                feature.properties['EaNox'] <= 442.404531) {
+
+            return {
+                radius: 16.66666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 442.404531 &&
+                feature.properties['EaNox'] <= 470.054814) {
+
+            return {
+                radius: 17.64444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 470.054814 &&
+                feature.properties['EaNox'] <= 497.705098) {
+
+            return {
+                radius: 18.62222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 497.705098 &&
+                feature.properties['EaNox'] <= 525.355381) {
+
+            return {
+                radius: 19.6,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 525.355381 &&
+                feature.properties['EaNox'] <= 553.005664) {
+
+            return {
+                radius: 20.5778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 553.005664 &&
+                feature.properties['EaNox'] <= 580.655947) {
+
+            return {
+                radius: 21.5556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 580.655947 &&
+                feature.properties['EaNox'] <= 608.30623) {
+
+            return {
+                radius: 22.5334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 608.30623 &&
+                feature.properties['EaNox'] <= 635.956513) {
+
+            return {
+                radius: 23.5112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 635.956513 &&
+                feature.properties['EaNox'] <= 663.606797) {
+
+            return {
+                radius: 24.4888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 663.606797 &&
+                feature.properties['EaNox'] <= 691.25708) {
+
+            return {
+                radius: 25.4666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 691.25708 &&
+                feature.properties['EaNox'] <= 718.907363) {
+
+            return {
+                radius: 26.4444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 718.907363 &&
+                feature.properties['EaNox'] <= 746.557646) {
+
+            return {
+                radius: 27.4222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 746.557646 &&
+                feature.properties['EaNox'] <= 774.207929) {
+
+            return {
+                radius: 28.4,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 774.207929 &&
+                feature.properties['EaNox'] <= 801.858213) {
+
+            return {
+                radius: 29.3778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 801.858213 &&
+                feature.properties['EaNox'] <= 829.508496) {
+
+            return {
+                radius: 30.3556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 829.508496 &&
+                feature.properties['EaNox'] <= 857.158779) {
+
+            return {
+                radius: 31.3334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 857.158779 &&
+                feature.properties['EaNox'] <= 884.809062) {
+
+            return {
+                radius: 32.3112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 884.809062 &&
+                feature.properties['EaNox'] <= 912.459345) {
+
+            return {
+                radius: 33.2888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 912.459345 &&
+                feature.properties['EaNox'] <= 940.109629) {
+
+            return {
+                radius: 34.2666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 940.109629 &&
+                feature.properties['EaNox'] <= 967.759912) {
+
+            return {
+                radius: 35.2444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 967.759912 &&
+                feature.properties['EaNox'] <= 995.410195) {
+
+            return {
+                radius: 36.2222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 995.410195 &&
+                feature.properties['EaNox'] <= 1023.060478) {
+
+            return {
+                radius: 37.2,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 1023.060478 &&
+                feature.properties['EaNox'] <= 1050.710761) {
+
+            return {
+                radius: 38.1778,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 1050.710761 &&
+                feature.properties['EaNox'] <= 1078.361045) {
+
+            return {
+                radius: 39.1556,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 1078.361045 &&
+                feature.properties['EaNox'] <= 1106.011328) {
+
+            return {
+                radius: 40.1334,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 1106.011328 &&
+                feature.properties['EaNox'] <= 1133.661611) {
+
+            return {
+                radius: 41.1112,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 1133.661611 &&
+                feature.properties['EaNox'] <= 1161.311894) {
+
+            return {
+                radius: 42.0888,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 1161.311894 &&
+                feature.properties['EaNox'] <= 1188.962177) {
+
+            return {
+                radius: 43.0666,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 1188.962177 &&
+                feature.properties['EaNox'] <= 1216.612461) {
+
+            return {
+                radius: 44.0444,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 1216.612461 &&
+                feature.properties['EaNox'] <= 1244.262744) {
+
+            return {
+                radius: 45.0222,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['EaNox'] >= 1244.262744 &&
+                feature.properties['EaNox'] <= 1271.913027) {
+
+            return {
+                radius: 46.0,
+                fillColor: '#33a02c',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        }
+        map.createPane('pane_EaNox5');
+        map.getPane('pane_EaNox5').style.zIndex = 606;
+        var json_EaNox5JSON = new L.geoJson(json_EaNox5, {
+            pane: 'pane_EaNox5',
+            onEachFeature: pop_EaNox5,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, doStyleEaNox5(feature))
+            }
+        });
+        bounds_group.addLayer(json_EaNox5JSON);
+        function pop_E17osNoL26(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><td colspan="2">' 
+ + (feature.properties['oris'] !== null ? Autolinker.link(String(feature.properties['oris'])) : '') 
+ + '</td></tr><tr><td colspan="2">' 
+ + (feature.properties['Facility'] !== null ? Autolinker.link(String(feature.properties['Facility'])) : '') 
+// + '</td></tr><tr><td colspan="2">' 
+// + (feature.properties['aHIE2017'] !== null ? Autolinker.link(String(feature.properties['aHIE2017'])) : '') 
+// + '</td></tr><tr><td colspan="2">' 
+// + (feature.properties['aNOE2017'] !== null ? Autolinker.link(String(feature.properties['aNOE2017'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'ERTAC OS 2017 HI '+
+ + (feature.properties['E2017osHI'] !== null ? Autolinker.link(String(feature.properties['E2017osHI'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'ERTAC OS 2017 NOx '+
+ + (feature.properties['osNOE2017'] !== null ? Autolinker.link(String(feature.properties['osNOE2017'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Longitude'] !== null ? Autolinker.link(String(feature.properties['Longitude'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Latitude'] !== null ? Autolinker.link(String(feature.properties['Latitude'])) : '') 
+ + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleE17osNoL26(feature) {
+        if (feature.properties['osNOE2017'] >= 0.0 &&
+                feature.properties['osNOE2017'] <= 0.0) {
+
+            return {
+                radius: 0.0,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 0.0 &&
+                feature.properties['osNOE2017'] <= 27.650283) {
+
+            return {
+                radius: 2.0,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 27.650283 &&
+                feature.properties['osNOE2017'] <= 55.300566) {
+
+            return {
+                radius: 2.97778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 55.300566 &&
+                feature.properties['osNOE2017'] <= 82.95085) {
+
+            return {
+                radius: 3.95556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 82.95085 &&
+                feature.properties['osNOE2017'] <= 110.601133) {
+
+            return {
+                radius: 4.93334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 110.601133 &&
+                feature.properties['osNOE2017'] <= 138.251416) {
+
+            return {
+                radius: 5.91112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 138.251416 &&
+                feature.properties['osNOE2017'] <= 165.901699) {
+
+            return {
+                radius: 6.88888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 165.901699 &&
+                feature.properties['osNOE2017'] <= 193.551982) {
+
+            return {
+                radius: 7.86666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 193.551982 &&
+                feature.properties['osNOE2017'] <= 221.202266) {
+
+            return {
+                radius: 8.84444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 221.202266 &&
+                feature.properties['osNOE2017'] <= 248.852549) {
+
+            return {
+                radius: 9.82222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 248.852549 &&
+                feature.properties['osNOE2017'] <= 276.502832) {
+
+            return {
+                radius: 10.8,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 276.502832 &&
+                feature.properties['osNOE2017'] <= 304.153115) {
+
+            return {
+                radius: 11.77778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 304.153115 &&
+                feature.properties['osNOE2017'] <= 331.803398) {
+
+            return {
+                radius: 12.75556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 331.803398 &&
+                feature.properties['osNOE2017'] <= 359.453682) {
+
+            return {
+                radius: 13.73334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 359.453682 &&
+                feature.properties['osNOE2017'] <= 387.103965) {
+
+            return {
+                radius: 14.71112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 387.103965 &&
+                feature.properties['osNOE2017'] <= 414.754248) {
+
+            return {
+                radius: 15.68888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 414.754248 &&
+                feature.properties['osNOE2017'] <= 442.404531) {
+
+            return {
+                radius: 16.66666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 442.404531 &&
+                feature.properties['osNOE2017'] <= 470.054814) {
+
+            return {
+                radius: 17.64444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 470.054814 &&
+                feature.properties['osNOE2017'] <= 497.705098) {
+
+            return {
+                radius: 18.62222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 497.705098 &&
+                feature.properties['osNOE2017'] <= 525.355381) {
+
+            return {
+                radius: 19.6,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 525.355381 &&
+                feature.properties['osNOE2017'] <= 553.005664) {
+
+            return {
+                radius: 20.5778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 553.005664 &&
+                feature.properties['osNOE2017'] <= 580.655947) {
+
+            return {
+                radius: 21.5556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 580.655947 &&
+                feature.properties['osNOE2017'] <= 608.30623) {
+
+            return {
+                radius: 22.5334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 608.30623 &&
+                feature.properties['osNOE2017'] <= 635.956513) {
+
+            return {
+                radius: 23.5112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 635.956513 &&
+                feature.properties['osNOE2017'] <= 663.606797) {
+
+            return {
+                radius: 24.4888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 663.606797 &&
+                feature.properties['osNOE2017'] <= 691.25708) {
+
+            return {
+                radius: 25.4666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 691.25708 &&
+                feature.properties['osNOE2017'] <= 718.907363) {
+
+            return {
+                radius: 26.4444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 718.907363 &&
+                feature.properties['osNOE2017'] <= 746.557646) {
+
+            return {
+                radius: 27.4222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 746.557646 &&
+                feature.properties['osNOE2017'] <= 774.207929) {
+
+            return {
+                radius: 28.4,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 774.207929 &&
+                feature.properties['osNOE2017'] <= 801.858213) {
+
+            return {
+                radius: 29.3778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 801.858213 &&
+                feature.properties['osNOE2017'] <= 829.508496) {
+
+            return {
+                radius: 30.3556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 829.508496 &&
+                feature.properties['osNOE2017'] <= 857.158779) {
+
+            return {
+                radius: 31.3334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 857.158779 &&
+                feature.properties['osNOE2017'] <= 884.809062) {
+
+            return {
+                radius: 32.3112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 884.809062 &&
+                feature.properties['osNOE2017'] <= 912.459345) {
+
+            return {
+                radius: 33.2888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 912.459345 &&
+                feature.properties['osNOE2017'] <= 940.109629) {
+
+            return {
+                radius: 34.2666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 940.109629 &&
+                feature.properties['osNOE2017'] <= 967.759912) {
+
+            return {
+                radius: 35.2444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 967.759912 &&
+                feature.properties['osNOE2017'] <= 995.410195) {
+
+            return {
+                radius: 36.2222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 995.410195 &&
+                feature.properties['osNOE2017'] <= 1023.060478) {
+
+            return {
+                radius: 37.2,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 1023.060478 &&
+                feature.properties['osNOE2017'] <= 1050.710761) {
+
+            return {
+                radius: 38.1778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 1050.710761 &&
+                feature.properties['osNOE2017'] <= 1078.361045) {
+
+            return {
+                radius: 39.1556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 1078.361045 &&
+                feature.properties['osNOE2017'] <= 1106.011328) {
+
+            return {
+                radius: 40.1334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 1106.011328 &&
+                feature.properties['osNOE2017'] <= 1133.661611) {
+
+            return {
+                radius: 41.1112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 1133.661611 &&
+                feature.properties['osNOE2017'] <= 1161.311894) {
+
+            return {
+                radius: 42.0888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 1161.311894 &&
+                feature.properties['osNOE2017'] <= 1188.962177) {
+
+            return {
+                radius: 43.0666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 1188.962177 &&
+                feature.properties['osNOE2017'] <= 1216.612461) {
+
+            return {
+                radius: 44.0444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 1216.612461 &&
+                feature.properties['osNOE2017'] <= 1244.262744) {
+
+            return {
+                radius: 45.0222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['osNOE2017'] >= 1244.262744 &&
+                feature.properties['osNOE2017'] <= 1271.913027) {
+
+            return {
+                radius: 46.0,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        }
+        map.createPane('pane_E17osNoL26');
+        map.getPane('pane_E17osNoL26').style.zIndex = 607;
+        var json_E17osNoL26JSON = new L.geoJson(json_E17osNoL26, {
+            pane: 'pane_E17osNoL26',
+            onEachFeature: pop_E17osNoL26,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, doStyleE17osNoL26(feature))
+            }
+        });
+        bounds_group.addLayer(json_E17osNoL26JSON);
+        function pop_E17aNoL27(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><td colspan="2">' 
+ + (feature.properties['oris'] !== null ? Autolinker.link(String(feature.properties['oris'])) : '') 
+ + '</td></tr><tr><td colspan="2">' 
+ + (feature.properties['Facility'] !== null ? Autolinker.link(String(feature.properties['Facility'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'ERTAC annual 2017 HI '+
+ + (feature.properties['aHIE2017'] !== null ? Autolinker.link(String(feature.properties['aHIE2017'])) : '') 
+ + '</td></tr><tr><td colspan="2">' + 'ERTAC annual 2017 NOx '+
+ + (feature.properties['aNOE2017'] !== null ? Autolinker.link(String(feature.properties['aNOE2017'])) : '') 
+// + '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['E2017osHI'] !== null ? Autolinker.link(String(feature.properties['E2017osHI'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['osNOE2017'] !== null ? Autolinker.link(String(feature.properties['osNOE2017'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Longitude'] !== null ? Autolinker.link(String(feature.properties['Longitude'])) : '') 
+ //+ '</td></tr><tr><td colspan="2">' 
+ //+ (feature.properties['Latitude'] !== null ? Autolinker.link(String(feature.properties['Latitude'])) : '') 
+ + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleE17aNoL27(feature) {
+        if (feature.properties['aNOE2017'] >= 0.0 &&
+                feature.properties['aNOE2017'] <= 0.0) {
+
+            return {
+                radius: 0.0,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 0.0 &&
+                feature.properties['aNOE2017'] <= 27.650283) {
+
+            return {
+                radius: 2.0,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 27.650283 &&
+                feature.properties['aNOE2017'] <= 55.300566) {
+
+            return {
+                radius: 2.97778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 55.300566 &&
+                feature.properties['aNOE2017'] <= 82.95085) {
+
+            return {
+                radius: 3.95556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 82.95085 &&
+                feature.properties['aNOE2017'] <= 110.601133) {
+
+            return {
+                radius: 4.93334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 110.601133 &&
+                feature.properties['aNOE2017'] <= 138.251416) {
+
+            return {
+                radius: 5.91112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 138.251416 &&
+                feature.properties['aNOE2017'] <= 165.901699) {
+
+            return {
+                radius: 6.88888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 165.901699 &&
+                feature.properties['aNOE2017'] <= 193.551982) {
+
+            return {
+                radius: 7.86666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 193.551982 &&
+                feature.properties['aNOE2017'] <= 221.202266) {
+
+            return {
+                radius: 8.84444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 221.202266 &&
+                feature.properties['aNOE2017'] <= 248.852549) {
+
+            return {
+                radius: 9.82222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 248.852549 &&
+                feature.properties['aNOE2017'] <= 276.502832) {
+
+            return {
+                radius: 10.8,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 276.502832 &&
+                feature.properties['aNOE2017'] <= 304.153115) {
+
+            return {
+                radius: 11.77778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 304.153115 &&
+                feature.properties['aNOE2017'] <= 331.803398) {
+
+            return {
+                radius: 12.75556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 331.803398 &&
+                feature.properties['aNOE2017'] <= 359.453682) {
+
+            return {
+                radius: 13.73334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 359.453682 &&
+                feature.properties['aNOE2017'] <= 387.103965) {
+
+            return {
+                radius: 14.71112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 387.103965 &&
+                feature.properties['aNOE2017'] <= 414.754248) {
+
+            return {
+                radius: 15.68888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 414.754248 &&
+                feature.properties['aNOE2017'] <= 442.404531) {
+
+            return {
+                radius: 16.66666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 442.404531 &&
+                feature.properties['aNOE2017'] <= 470.054814) {
+
+            return {
+                radius: 17.64444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 470.054814 &&
+                feature.properties['aNOE2017'] <= 497.705098) {
+
+            return {
+                radius: 18.62222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 497.705098 &&
+                feature.properties['aNOE2017'] <= 525.355381) {
+
+            return {
+                radius: 19.6,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 525.355381 &&
+                feature.properties['aNOE2017'] <= 553.005664) {
+
+            return {
+                radius: 20.5778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 553.005664 &&
+                feature.properties['aNOE2017'] <= 580.655947) {
+
+            return {
+                radius: 21.5556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 580.655947 &&
+                feature.properties['aNOE2017'] <= 608.30623) {
+
+            return {
+                radius: 22.5334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 608.30623 &&
+                feature.properties['aNOE2017'] <= 635.956513) {
+
+            return {
+                radius: 23.5112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 635.956513 &&
+                feature.properties['aNOE2017'] <= 663.606797) {
+
+            return {
+                radius: 24.4888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 663.606797 &&
+                feature.properties['aNOE2017'] <= 691.25708) {
+
+            return {
+                radius: 25.4666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 691.25708 &&
+                feature.properties['aNOE2017'] <= 718.907363) {
+
+            return {
+                radius: 26.4444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 718.907363 &&
+                feature.properties['aNOE2017'] <= 746.557646) {
+
+            return {
+                radius: 27.4222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 746.557646 &&
+                feature.properties['aNOE2017'] <= 774.207929) {
+
+            return {
+                radius: 28.4,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 774.207929 &&
+                feature.properties['aNOE2017'] <= 801.858213) {
+
+            return {
+                radius: 29.3778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 801.858213 &&
+                feature.properties['aNOE2017'] <= 829.508496) {
+
+            return {
+                radius: 30.3556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 829.508496 &&
+                feature.properties['aNOE2017'] <= 857.158779) {
+
+            return {
+                radius: 31.3334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 857.158779 &&
+                feature.properties['aNOE2017'] <= 884.809062) {
+
+            return {
+                radius: 32.3112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 884.809062 &&
+                feature.properties['aNOE2017'] <= 912.459345) {
+
+            return {
+                radius: 33.2888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 912.459345 &&
+                feature.properties['aNOE2017'] <= 940.109629) {
+
+            return {
+                radius: 34.2666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 940.109629 &&
+                feature.properties['aNOE2017'] <= 967.759912) {
+
+            return {
+                radius: 35.2444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 967.759912 &&
+                feature.properties['aNOE2017'] <= 995.410195) {
+
+            return {
+                radius: 36.2222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 995.410195 &&
+                feature.properties['aNOE2017'] <= 1023.060478) {
+
+            return {
+                radius: 37.2,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 1023.060478 &&
+                feature.properties['aNOE2017'] <= 1050.710761) {
+
+            return {
+                radius: 38.1778,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 1050.710761 &&
+                feature.properties['aNOE2017'] <= 1078.361045) {
+
+            return {
+                radius: 39.1556,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 1078.361045 &&
+                feature.properties['aNOE2017'] <= 1106.011328) {
+
+            return {
+                radius: 40.1334,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 1106.011328 &&
+                feature.properties['aNOE2017'] <= 1133.661611) {
+
+            return {
+                radius: 41.1112,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 1133.661611 &&
+                feature.properties['aNOE2017'] <= 1161.311894) {
+
+            return {
+                radius: 42.0888,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 1161.311894 &&
+                feature.properties['aNOE2017'] <= 1188.962177) {
+
+            return {
+                radius: 43.0666,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 1188.962177 &&
+                feature.properties['aNOE2017'] <= 1216.612461) {
+
+            return {
+                radius: 44.0444,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 1216.612461 &&
+                feature.properties['aNOE2017'] <= 1244.262744) {
+
+            return {
+                radius: 45.0222,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        if (feature.properties['aNOE2017'] >= 1244.262744 &&
+                feature.properties['aNOE2017'] <= 1271.913027) {
+
+            return {
+                radius: 46.0,
+                fillColor: '#ecf536',
+                color: '#000000',
+                weight: 0.0,
+                fillOpacity: '0.486275',
+                opacity: '0.486275',
+                dashArray: ''
+            }
+        }
+
+        }
+        map.createPane('pane_E17aNoL27');
+        map.getPane('pane_E17aNoL27').style.zIndex = 608;
+        var json_E17aNoL27JSON = new L.geoJson(json_E17aNoL27, {
+            pane: 'pane_E17aNoL27',
+            onEachFeature: pop_E17aNoL27,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, doStyleE17aNoL27(feature))
+            }
+        });
+        bounds_group.addLayer(json_E17aNoL27JSON);
+        raster_group.addTo(map);
+        feature_group.addTo(map);
+        setBounds();
+		
+				
+		var baseLayers = {
+			"Outdoors": basemap0,
+			"Pirates!": pirates,};
+			
+			var overlays = {
+		"CAMD Annual": json_CaNo3JSON,
+				"CAMD OS": json_CosNo2JSON,
+		"ERTAC Annual": json_EaNox5JSON,
+		"ERTAC OS": json_EosNox4JSON,
+		"IPM Annual":json_IaNO1JSON,
+		"IPM OS":json_IosNo0JSON,
+		"ERTAC Annual 2017 L2": json_E17aNoL27JSON,
+		"ERTAC OS 2017 L2": json_E17osNoL26JSON
+		};
+			L.control.layers(baseLayers, overlays).addTo(map);
+			
+		
+		
+        </script>
+    </body>
+</html>
