@@ -61,6 +61,12 @@
             attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> , >ADAM</a>',
             maxZoom:15
         })
+	
+	var basemap2 = L.tileLayer('http://{S}tile.stamen.com/toner/{Z}/{X}/{Y}.png', {
+            attribution: '&copy; <a href="http://stamen.com">Stamen Design</a> , >ADAM</a>',
+            maxZoom:15
+        })
+		
 		var mbAttr = '&copy; <a href="https://www.mapbox.com/">MapBox</a>,>ADAM</a>',
 		mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiNDJhcnRodXJkZW50IiwiYSI6ImNpbHk2cWZ5MDA1dzI4M2tzN3NrcGp3cXUifQ.IVHPZyM8rvKuYKcfSzPFEQ';
 		var pirates  = L.tileLayer(mbUrl, {id: 'mapbox.pirates',   attribution: mbAttr, maxZoom:15})
@@ -5713,7 +5719,8 @@
 		
 				
 		var baseLayers = {
-			"Outdoors": basemap0,
+			"Map 1": basemap0,
+			"Map 2": basemap1,
 			"Pirates!": pirates,};
 			
 			var overlays = {
