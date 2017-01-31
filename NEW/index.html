@@ -62,7 +62,7 @@
             maxZoom:15
         })
 	
-	var basemap2 = L.tileLayer('http://{S}tile.stamen.com/toner/{Z}/{X}/{Y}.png', {
+	var basemap2 = new L.StamenTileLayer("terrain")('http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg', {
             attribution: '&copy; <a href="http://stamen.com">Stamen Design</a> , >ADAM</a>',
             maxZoom:15
         })
