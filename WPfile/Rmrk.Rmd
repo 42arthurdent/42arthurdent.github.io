@@ -1,0 +1,76 @@
+---
+title: "Using R Markdown to Create Reports"
+author: "Adam Lewis"
+date: "July 30, 2017"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(DiagrammeR)
+
+## Global options
+options(max.print="75")
+knitr::opts_chunk$set(
+	echo = TRUE,
+  cache = TRUE,
+	prompt = FALSE,
+	tidy = TRUE,
+	comment = NA,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+## Intro
+
+Using R and Rstudio along with the R Markdown package allows you to produce documents in markdown that can be easily converted to MS Word, PDF, or saved as an HTML file that can be hosted as a website. The R Markdown file can contain just text like simple written report or a much more complex document with embedded R code to create charts, graphs, maps, or any other plot that can be produced using R. The text plots and formatting can all be created in a single document with a streamlined workflow. Instead of producing charts, tables, and graphs in MS Excel, and then placing those items in the text of a Word document, and then adding any other images (maps etc.) all that work can be completed in one place. If the report is required to be replicated with new data, it is simple to update the data rerun the code and produce a new version of the document. 
+
+## Important links
+The following preliminary steps should be taken before proceeding.  
+Download and install:  
+**R** <https://cran.r-project.org/bin/windows/base/>.  
+**RSTUDIO** <https://www.rstudio.com/products/rstudio/download/#download>.  
+To produce PDF documents you may also have to download and install pandoc, which is available [here](https://github.com/jgm/pandoc/releases/tag/1.19.2.1).
+
+##Package Installation
+In the tools menu of RStudio click 'Install packages' and type Rmarkdown, make sure that the 'install dependencies' box is checked, that will also install some other important packages, like knitr. 
+
+For reference you can download the most recent Rmarkdown cheat sheet by navigating to the help menu and selecting the appropriate file under cheatsheets.
+
+Once all of that is completed go to the file tab in RStudio and select new file -> R Markdown fill out the boxes and click okay on the window that pops up, that info can be updated later.
+
+Save the new document that R Studio opens somewhere convenient and make sure the file ends in ".Rmd" (the case is very important here).
+
+![](https://42arthurdent.github.io/WPfile/rm1.png)
+
+See the slightly darker bands? Those are called 'code chunks' within each chunk you can select various options via the gear symbol such as: to display the R code, to run and display the code, to not run or display code (this is used when you want to set up for an action completed later -like call a library), show or hide warnings in your final document etc. 
+
+The other sections are where you place your text. The text is formatted using the Pandoc format (summarized on the cheatsheet) which shows up after create the in your desired format. A # means Header size 1 and two spaces creates a paragraph break etc.  You can play with the formatting of the sample page, add text and format a few lines to see how they come out.
+
+Then select the small pull down at the top of the Source panel (where your new document appeared) that says Knitr and looks like a ball of yarn -there are options to Knit to HTML, PDF or Word, 
+
+From the Rmarkdown cheatsheet: 
+When you render, R Markdown
+1. runs the R code, embeds results and text into .md file with knitr
+2. then converts the .md file into the finished format with pandoc
+
+## Running R Code
+Here is a flow chart of the process made to show haw to include a plot made using R code:
+
+
+```{r, echo=FALSE}
+
+DiagrammeR::DiagrammeR("graph LR;
+    A(Rmd)-->B((knitr)); 
+    B-->C{pandoc};
+    C-->D>HTML];
+    C-->E>PDF];
+    C-->F>Word];")
+```
+
+Versions of this blog entry are available as an [HTML](https://42arthurdent.github.io/WPfile/Rmrk.html) page, PDF and a text file containing the info from the Rmd 
+
+
+
