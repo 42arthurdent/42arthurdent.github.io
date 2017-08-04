@@ -1,0 +1,43 @@
+---
+title: "Adding Citations to R markdown"
+author: "Adam Lewis"
+date: "August 4, 2017"
+output:
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      pdf_document: default
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+bibliography: bibliography.bib
+---
+
+
+## Abstract
+
+*Putting this section in between asterisks prints it out in italics. This blog goes shows you how to add citations to an Rmarkdown document.*
+
+
+## Introduction
+Adding citations is an important part of any complete document, with this blog in addition tho the previous [entry](https://42arthurdent.github.io/WPfile/Rmrk.html) about setting up an R markdown document should hopefully get you started.
+
+## Methods
+
+* Create a new R markdown document and save it with the file extension .Rmd to your working directory, which should be set somewhere convenient as you need to save other files to this location. Delete everything in that file but the info at the top in between the set of three dashes. Add a new line to that section 'bibliography: bibliography.bib'.
+* You will need to save the references as a .bib file. Luckily for most items available from the Temple University Library system most journals and other items have an 'Export citation' look for something that says .bib or BibTex.
+* Save those files and open a new text file named bibliography.bib in your working directory, copy the data from the library file to your bibliography file.
+* The format to create your own .bib file is written up very clearly [here](https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM) @bibGuide if you can't get the completed file from your source library.
+* In your text if you want to cite something just use the \@ sign and brackets to wrap the name of the reference from the first line of the .bib data. This usually is just the author's name underscore year.
+    + For example writing [see \@R_Core_Team_2017] produces [see @R_Core_Team_2017]
+    + Or just write \@R_Core_Team_2017 so the text appears as part of the document like this: as noted in @R_Core_Team_2017
+* References will show up at the bottom of your document after last text entry, so add a header and you're done!
+* As an extra bonus R Studio has a spell-checking function- just hit F7
+
+Versions of this blog entry are available as an [HTML](https://42arthurdent.github.io/WPfile/Rmrk2.html) page, [PDF](https://42arthurdent.github.io/WPfile/Rmrk2.pdf) and a [text](https://42arthurdent.github.io/WPfile/RmarkdownSample2.txt) file containing the info from the Rmd file.
+
+
+## References
+
