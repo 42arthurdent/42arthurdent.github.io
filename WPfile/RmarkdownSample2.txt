@@ -22,7 +22,7 @@ bibliography: bibliography.bib
 
 
 ## Introduction
-Adding citations is an important part of any complete document, with this blog in addition tho the previous [entry](https://42arthurdent.github.io/WPfile/Rmrk.html) about setting up an R markdown document should hopefully get you started.
+Adding citations is an important part of any complete document, with this blog in addition to the previous [entry](https://42arthurdent.github.io/WPfile/Rmrk.html) about setting up an R markdown document should hopefully get you started.
 
 ## Methods
 
